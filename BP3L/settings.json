@@ -1,45 +1,10 @@
 {
   "public": {
-    "appName": "爱健康",
-    "appDesc": "iJianKang patient mobile app",
-    "version": "0.0.2",
-    "rule": {
-      "注释": "血压超标规则",
-      "min": [40, 120],
-      "max": [80, 200],
-      "BP": {
-        "LP": [
-          60,
-          80
-        ],
-        "HP": [
-          90,
-          100
-        ]
-      }
-    },
+    "appName": "爱健康TEST",
+    "appDesc": "iJianKang test",
+    "id": "com.ihealthlabs.ijiankang.test",
+    "version": "0.0.1",
+    "measureSecret":"148779a50cf3c1c06634c996b54def5e"
+  }
 
-    "measureSecret": {
-      "ios":"ffd5a4a408e902acac70d7a8956f833c",
-      "android":"c8b6d55c7ac1e1eecfc1787bd244a214"
-    }
-  },
-  "ks3": {
-    "AK": "IyiVD48HDB4E9HDv4dxk",
-    "SK": "IP2lNIYOT7eNeWaLZnQBJeVpKdPASZ8/GrwaCmwt",
-    "bucket": "ijiankang2"
-  },
-  "sms": {
-    "sc": "d526a17f83bb4ef3a264ab496e35f75b",
-    "sv": "289e1f554e974ed0995a30c9bfa90a81",
-    "smsRateLimitInMinutes": 1,
-    "mobileForTestList": [
-      "13920967296",
-      "15910383802",
-      "15910383801",
-      "15900206571"
-    ]
-  },
-  "push_appSecret": "2MNBzx2LYFDrG221Hn8dDA==",
-  "push_to_app": "com.ihealthlabs.ijiankang.doctor.ios"
 }

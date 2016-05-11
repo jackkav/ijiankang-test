@@ -5,16 +5,22 @@
 BP3L.Discovery = React.createClass({
 
 	discovery(){
-		alert('discovery')
+
+		BpManagerCordova.startDiscovery((res)=>{
+			console.log('startDiscovery Success', res)
+		}, (res)=>{
+			console.log('startDiscovery Fail', res)
+		}, BP3L.appsecret)
+
+
 	},
 	render() {
 		return <div>
 
-			<h1>Hello, {this.props.name}</h1>
 
-			<button onClick={this.discovery}>discovery</button>
-
-			<RB.Button bsStyle="primary">Primary</RB.Button>
+			<RB.Button bsStyle="primary" onClick={this.discovery}>
+				Discovery
+			</RB.Button>
 
 		</div>
 	}

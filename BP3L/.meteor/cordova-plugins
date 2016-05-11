@@ -1,2 +1,2 @@
-com.ihealth.plugin.base.basemanagercordova@file://../cordova-plugins/base/
-com.ihealth.plugin.bp.bpmanagercordova@file://../cordova-plugins/bp/
+com.ihealth.plugin.base.basemanagercordova@file://../../cordova-plugins/base/
+com.ihealth.plugin.bp.bpmanagercordova@file://../../cordova-plugins/bp/
