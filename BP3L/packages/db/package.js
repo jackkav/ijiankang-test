@@ -13,12 +13,23 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   api.use('ecmascript');
-  api.addFiles('db.js');
+
+  api.use([
+    "aldeed:simple-schema",
+    "aldeed:collection2",
+  ], ['client', 'server'])
 
 
-  api.addFiles('schema/base.js');
-  api.addFiles('schema/result.js');
+  api.addFiles('db.js',["server", "client"]);
 
+  api.addFiles('schema/base.js', ["server", "client"]);
+  api.addFiles('schema/result.js', ["server", "client"]);
+
+
+  api.export([
+    "DB",
+    "Schema",
+  ], ["server", "client"])
 
 });
 
