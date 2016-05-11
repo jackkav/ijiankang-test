@@ -1,0 +1,3 @@
+[submodule "cordova-plugins"]
+	path = cordova-plugins
+	url = https://github.com/iHealthLab/cordova-plugins.git
