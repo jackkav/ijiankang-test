@@ -38,4 +38,8 @@ aldeed:simple-schema
 
 
 promise
+raix:eventemitter
+
+## self defined
 ijiankang-test:db
+
