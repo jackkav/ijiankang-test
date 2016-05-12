@@ -20,6 +20,11 @@ BP3L.APItest = React.createClass({
     this.APIConnect.connect();
   },
 
+  disconnect() {
+    let macId = 'D05FB8418966';
+    this.APIConnect.disConnect(macId);
+  },
+
   render() {
 		return <div>
 
@@ -32,6 +37,10 @@ BP3L.APItest = React.createClass({
 
       <RB.Button bsStyle="primary" onClick={this.connect}>
 				Connect API
+			</RB.Button>
+
+      <RB.Button bsStyle="primary" onClick={this.disconnect}>
+				Disconnect API
 			</RB.Button>
 
 
