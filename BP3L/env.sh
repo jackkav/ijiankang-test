@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 
 #export FRAMEWORK_LIB=~/Desktop/ihealth/framework-iHealth/library
 
