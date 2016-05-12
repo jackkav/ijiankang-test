@@ -30,9 +30,9 @@ BP3L.APItest = React.createClass({
   _runAll() {
     let macId = 'D05FB8418966';
     let self = this;
-    if(count > 1000) {
-      return;
-    }
+    // if(count > 1000) {
+    //   return;
+    // }
     this.APIConnect.connectPromise(macId).then((actualMacId)=>{
 
       let disconnect = () =>{

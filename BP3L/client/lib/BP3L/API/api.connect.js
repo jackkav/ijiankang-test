@@ -245,12 +245,6 @@ class APIConnect extends EventEmitter {
 				let deviceInfo = h.getDeviceInfo();
 	  		let apiType = 'dis-connect';
 
-				BpManagerCordova.disConnectDevice((res)=>{
-					console.log('Disconnect callback success!', res);
-				}, (error)=>{
-					console.log('Cordvoa Error: ', error);
-				}, BP3L.appsecret, macId);
-
 
 				BpManagerCordova.setDisconnectCallback((res)=>{
 
@@ -280,6 +274,12 @@ class APIConnect extends EventEmitter {
 				}, (error)=>{
 					console.error('Cordvoa Error: ', error);
 				}, BP3L.appsecret, macId)
+
+				BpManagerCordova.disConnectDevice((res)=>{
+					console.log('Disconnect callback success!', res);
+				}, (error)=>{
+					console.log('Cordvoa Error: ', error);
+				}, BP3L.appsecret, macId);
 
 			}, (error)=>{
 				console.log(error.errMsg);
