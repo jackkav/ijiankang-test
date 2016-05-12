@@ -31,6 +31,7 @@ react-runtime-prod@=0.14.3
 kadira:flow-router
 kadira:react-layout
 
+reactive-var
 
 aldeed:collection2
 aldeed:simple-schema
@@ -42,4 +43,3 @@ raix:eventemitter
 
 ## self defined
 ijiankang-test:db
-

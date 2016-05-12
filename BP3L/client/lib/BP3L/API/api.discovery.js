@@ -11,6 +11,7 @@ class APIDiscovery extends EventEmitter {
 		this.on('start',this.discovery)
 		this.on('stop',this.stop)
 
+		// this.reactLog = new ReactiveVar({});
 	}
 
 	discovery(){
