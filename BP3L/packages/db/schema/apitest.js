@@ -14,6 +14,11 @@ Schema.APItestInfo = new SimpleSchema([Schema.Base, {
   status: {
     type: String,
     label: '成功(success) 失败(failure)'
+  },
+
+  data:{
+    type: Object,
+    blackbox: true, //todo
   }
 
 }])

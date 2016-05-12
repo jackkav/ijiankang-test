@@ -4,6 +4,7 @@ class APIConnect extends EventEmitter {
 		super(props)
 
 	  this.initEvent()
+		this.data = {}
 	}
 
 	initEvent(){
@@ -20,14 +21,21 @@ class APIConnect extends EventEmitter {
 
   discoveryPromise(lastId) {
 		let self = this;
-    return new Promise((resolve, reject)=>{
+		let deviceInfo = h.getDeviceInfo();
+		let apiType = 'discovery';
 
+    return new Promise((resolve, reject)=>{
+			self.data = {
+				type: 'discoveryByIdAndConnect',
+				startDiscoveryTime: +new Date()
+			}
       BpManagerCordova.startDiscovery((res)=>{
 
         let device = BP3L.parseJSON(res);
 				console.log('Searching', res);
         if( !lastId || device.address && device.address.substr(-4) === lastId){
 
+					self.data.connectSuccessTime = +new Date();
           this.stopDiscovery();
 
           let device = BP3L.parseJSON(res);
@@ -35,13 +43,17 @@ class APIConnect extends EventEmitter {
           resolve(device.address);
 
 					console.log('Discovery success', device.address);
+
         }else if(device && device.msg === 'DiscoveryDone'){
 
+					self.data.discoveryFailTime = +new Date();
 					let status = 'failure';
-					// DB.APItest.insert({deviceInfo, apiType, status});
+					let data = self.data;
+
+					let content = {deviceInfo, apiType, status, data}
+
+					DB.APItest.insert(content);
 					reject(`Discovery timeout ${lastId}`)
-					// let lastId = '8966';
-					// self.discoveryPromise(lastId);
 				}
 
       }, (err)=>{
@@ -103,6 +115,8 @@ class APIConnect extends EventEmitter {
 	  		let apiType = 'connect';
 				console.log(`Start connect ${macId}`);
 
+				Object.assign(self.data, {startConnectTime: +new Date()})
+
 	      BpManagerCordova.connectDevice((res)=>{
 
 	        let device = BP3L.parseJSON(res);
@@ -110,8 +124,9 @@ class APIConnect extends EventEmitter {
 	        if(device && device.msg === 'Connected') {
 
 	          let status = 'success';
-
-	          // DB.APItest.insert({deviceInfo, apiType, status});
+						let data = self.data;
+						Object.assign(self.data, {connectSuccessTime: +new Date()})
+	          DB.APItest.insert({deviceInfo, apiType, status, data});
 
 						console.log(`Connect success ${macId}`);
 
@@ -119,8 +134,9 @@ class APIConnect extends EventEmitter {
 	        }else if(device && device.msg === 'ConnectionFail') {
 
 						let status = 'failure';
-
-		        // DB.APItest.insert({deviceInfo, apiType, status});
+						let data = self.data;
+						Object.assign(self.data, {connectFailureTime: +new Date()})
+		        DB.APItest.insert({deviceInfo, apiType, status, data});
 
 						console.log(`Connect failure ${macId}`);
 

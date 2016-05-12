@@ -35,15 +35,20 @@ BP3L.APItest = React.createClass({
     }
     this.APIConnect.connectPromise(macId).then((actualMacId)=>{
 
-      self.APIConnect.disconnectPromise(actualMacId).then((successMsg)=>{
-        console.log(successMsg);
+      let disconnect = () =>{
+        self.APIConnect.disconnectPromise(actualMacId).then((successMsg)=>{
+          console.log(successMsg);
 
-        console.log(count);
-        count++;
-        self._runAll();
-      }, (err)=>{
-        console.log(err);
-      })
+          console.log(count);
+          count++;
+          self._runAll();
+        }, (err)=>{
+          self._runAll();
+          console.log(err);
+        })
+      }
+
+      disconnect();
     }, (err)=>{
       console.log(err);
       self._runAll();
