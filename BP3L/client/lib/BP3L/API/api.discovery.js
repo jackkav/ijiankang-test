@@ -1,0 +1,90 @@
+
+class APIDiscovery extends EventEmitter {
+	constructor(props) {
+		super(props)
+
+	  this.initEvent()
+	}
+
+	initEvent(){
+
+		this.on('start',this.discovery)
+		this.on('stop',this.stop)
+
+	}
+
+	discovery(){
+
+		let deviceInfo = h.getDeviceInfo();
+		let apiType = 'start-discovery';
+
+		let discoveryFailureTime = Meteor.setTimeout(()=>{
+
+			let status = 'failure';
+			let content = {deviceInfo, apiType, status}
+			DB.APItest.insert(content);
+
+		}, 12200)
+		BpManagerCordova.startDiscovery((res)=>{
+
+			let device = BP3L.parseJSON(res);
+
+      if(device && device.msg === 'Discovery') {
+
+				this.stop();
+
+				Meteor.clearTimeout(discoveryFailureTime);
+
+        console.log("Insert DB startDiscovery Success");
+
+				let status = 'success';
+				let content = {deviceInfo, apiType, status}
+				DB.APItest.insert(content);
+
+      }
+
+		}, (err)=>{
+      console.log('Cordvoa Error: ', err);
+		}, BP3L.appsecret)
+	}
+
+
+	stop(){
+
+		let deviceInfo = h.getDeviceInfo();
+		let apiType = 'stop-discovery';
+
+		let stopDiscoveryFailureTime = Meteor.setTimeout(()=>{
+
+			let status = 'failure';
+			let content = {deviceInfo, apiType, status}
+			DB.APItest.insert(content);
+
+		}, 3000)
+
+		BpManagerCordova.stopDiscovery((res)=>{
+
+			let device = BP3L.parseJSON(res);
+
+      if(device && device.msg === 'DiscoveryDone') {
+
+				Meteor.clearTimeout(stopDiscoveryFailureTime);
+
+				let status = 'success';
+				let content = {deviceInfo, apiType, status}
+				DB.APItest.insert(content);
+
+        console.log('Insert DB stopDiscovery Success');
+				
+      }
+
+		},(err)=>{
+			console.log('Cordvoa Error: ', err);
+		}, BP3L.appsecret)
+
+	}
+
+}
+
+
+this.APIDiscovery = APIDiscovery

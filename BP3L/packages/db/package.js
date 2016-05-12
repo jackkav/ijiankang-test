@@ -24,6 +24,7 @@ Package.onUse(function(api) {
 
   api.addFiles('schema/base.js', ["server", "client"]);
   api.addFiles('schema/result.js', ["server", "client"]);
+  api.addFiles('schema/apitest.js', ["server", "client"]);
 
 
   api.export([

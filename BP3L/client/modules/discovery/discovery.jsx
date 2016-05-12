@@ -26,6 +26,10 @@ BP3L.Discovery = React.createClass({
 		this.t1.stop()
 	},
 
+	apitest() {
+		FlowRouter.go('/apitest');
+	},
+
 	render() {
 		return <div>
 
@@ -43,6 +47,10 @@ BP3L.Discovery = React.createClass({
 
 			</RB.ButtonToolbar>
 
+
+			<RB.Button bsStyle="primary" onClick={this.apitest}>
+				APItest
+			</RB.Button>
 
 		</div>
 	}

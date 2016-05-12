@@ -16,10 +16,14 @@ FlowRouter.route('/discovery', {
 	}
 });
 
-
-
 FlowRouter.route('/admin', {
 	action: function(params, queryParams) {
 		ReactLayout.render(App.AdminIndex)
+	}
+});
+
+FlowRouter.route('/apitest', {
+	action: function(params, queryParams) {
+		ReactLayout.render(BP3L.APItest)
 	}
 });
