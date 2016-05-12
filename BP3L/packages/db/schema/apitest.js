@@ -7,7 +7,8 @@ Schema.APItestInfo = new SimpleSchema([Schema.Base, {
   },
 
   deviceInfo: {
-    type: String,
+    type: Object,
+    blackbox: true, //todo
     label: '设备型号(Android/Iphone) 设备品牌(OPPO/XIAOMI...) 设备版本(4.4.4/9.2.1...)'
   },
 
