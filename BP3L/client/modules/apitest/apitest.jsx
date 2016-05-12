@@ -1,5 +1,7 @@
 
 
+let count = 0;
+
 BP3L.APItest = React.createClass({
 
   componentWillMount(){
@@ -23,6 +25,29 @@ BP3L.APItest = React.createClass({
   disconnect() {
     let macId = 'D05FB8418966';
     this.APIConnect.disConnect(macId);
+  },
+
+  _runAll() {
+    let macId = 'D05FB8418966';
+    let self = this;
+    if(count > 1000) {
+      return;
+    }
+    this.APIConnect.connectPromise(macId).then((actualMacId)=>{
+
+      self.APIConnect.disconnectPromise(actualMacId).then((successMsg)=>{
+        console.log(successMsg);
+
+        console.log(count);
+        count++;
+        self._runAll();
+      }, (err)=>{
+        console.log(err);
+      })
+    }, (err)=>{
+      console.log(err);
+      self._runAll();
+    })
   },
 
   getCssStyle() {
@@ -75,6 +100,12 @@ BP3L.APItest = React.createClass({
         <RB.Button bsStyle="primary" style={styles.button} onClick={this.disconnect}>
   				Disconnect API
   			</RB.Button>
+
+
+        <RB.Button bsStyle="primary" style={styles.button} onClick={this._runAll}>
+  				Run ALL
+  			</RB.Button>
+
       </div>
 
 		</div>

@@ -39,7 +39,7 @@ class APIDiscovery extends EventEmitter {
 
 				let status = 'failure';
 				DB.APItest.insert({deviceInfo, apiType, status});
-
+				
 			}
 
 		}, (err)=>{
