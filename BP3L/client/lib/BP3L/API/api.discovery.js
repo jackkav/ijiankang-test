@@ -19,13 +19,6 @@ class APIDiscovery extends EventEmitter {
 		let deviceInfo = h.getDeviceInfo();
 		let apiType = 'start-discovery';
 
-		let discoveryFailureTime = Meteor.setTimeout(()=>{
-
-			let status = 'failure';
-			let content = {deviceInfo, apiType, status}
-			DB.APItest.insert(content);
-
-		}, 12200)
 		BpManagerCordova.startDiscovery((res)=>{
 
 			let device = BP3L.parseJSON(res);
@@ -42,7 +35,12 @@ class APIDiscovery extends EventEmitter {
 				let content = {deviceInfo, apiType, status}
 				DB.APItest.insert(content);
 
-      }
+      }else if(device && device.msg === 'DiscoveryDone'){
+
+				let status = 'failure';
+				DB.APItest.insert({deviceInfo, apiType, status});
+
+			}
 
 		}, (err)=>{
       console.log('Cordvoa Error: ', err);

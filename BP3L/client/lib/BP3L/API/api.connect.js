@@ -48,19 +48,9 @@ class APIConnect extends EventEmitter {
 
       let deviceInfo = h.getDeviceInfo();
   		let apiType = 'connect';
-
-
-      let connectFauilreTime = Meteor.setTimeout(()=>{
-
-        let status = 'failure';
-
-        DB.APItest.insert({deviceInfo, apiType, status});
-
-      }, 15000)
+			console.log(`Start connect ${macId}`);
 
       BpManagerCordova.connectDevice((res)=>{
-
-        Meteor.clearTimeout(connectFauilreTime);
 
         let device = BP3L.parseJSON(res);
 
@@ -70,8 +60,16 @@ class APIConnect extends EventEmitter {
 
           DB.APItest.insert({deviceInfo, apiType, status});
 
-					console.log('Discovery success');
-        }
+					console.log(`Connect success ${macId}`);
+        }else if(device && device.msg === 'ConnectionFail') {
+
+					let status = 'failure';
+
+	        DB.APItest.insert({deviceInfo, apiType, status});
+
+					console.log(`Connect failure ${macId}`);
+
+				}
 
       },(err)=>{
 
@@ -126,11 +124,26 @@ class APIConnect extends EventEmitter {
 
 			BpManagerCordova.setDisconnectCallback((res)=>{
 
-				let status = 'success';
+				let device = BP3L.parseJSON(res);
 
-				DB.APItest.insert({deviceInfo, apiType, status});
+				if(device && device.address === macId) {
 
-				console.log('Disconnect end!')
+					let status = 'success';
+
+					DB.APItest.insert({deviceInfo, apiType, status});
+
+					console.log('Disconnect success!')
+
+				}else {
+					
+					let status = 'failure';
+
+					DB.APItest.insert({deviceInfo, apiType, status});
+
+					console.log('Disconnect failure!')
+				}
+
+
 
 			}, (error)=>{
 				console.error('Cordvoa Error: ', error);
