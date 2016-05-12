@@ -25,13 +25,15 @@ class APIConnect extends EventEmitter {
 
         let device = BP3L.parseJSON(res);
 
-        if( device.address && device.address.substr(-4) === lastId){
+        if( !lastId || device.address && device.address.substr(-4) === lastId){
 
           this.stopDiscovery();
 
           let device = BP3L.parseJSON(res);
 
           resolve(device.address);
+
+					console.log('Discovery success');
         }
 
       }, (err)=>{
@@ -41,7 +43,7 @@ class APIConnect extends EventEmitter {
   }
 
   connect() {
-    let lastId = '8966'
+    let lastId = '8966';
     this.discoveryPromise(lastId).then((macId)=>{
 
       let deviceInfo = h.getDeviceInfo();
@@ -62,11 +64,13 @@ class APIConnect extends EventEmitter {
 
         let device = BP3L.parseJSON(res);
 
-        if(device && device.msg === 'connected') {
+        if(device && device.msg === 'Connected') {
 
           let status = 'success';
 
           DB.APItest.insert({deviceInfo, apiType, status});
+
+					console.log('Discovery success');
         }
 
       },(err)=>{
@@ -77,8 +81,7 @@ class APIConnect extends EventEmitter {
 
     }, (err)=>{
       console.log("Make sure you discovery function is ok!", err)
-    }, BP3L.appsecret)
-
+    })
   }
 }
 
