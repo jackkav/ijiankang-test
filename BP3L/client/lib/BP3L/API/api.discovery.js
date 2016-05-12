@@ -66,17 +66,20 @@ class APIDiscovery extends EventEmitter {
 
 			let device = BP3L.parseJSON(res);
 
-      if(device && device.msg === 'DiscoveryDone') {
+			Meteor.clearTimeout(stopDiscoveryFailureTime);
 
-				Meteor.clearTimeout(stopDiscoveryFailureTime);
+      if(device && device.msg === 'DiscoveryDone') {
 
 				let status = 'success';
 				let content = {deviceInfo, apiType, status}
 				DB.APItest.insert(content);
 
         console.log('Insert DB stopDiscovery Success');
-				
-      }
+
+      }else if(device && device.msg === 'Error') {
+				let status = 'failure';
+				DB.APItest.insert({deviceInfo, apiType, status});
+			}
 
 		},(err)=>{
 			console.log('Cordvoa Error: ', err);
