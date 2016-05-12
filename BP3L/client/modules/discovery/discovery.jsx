@@ -6,8 +6,8 @@ BP3L.Discovery = React.createClass({
 
 
 	componentWillMount(){
-		this.t1 = new DiscoveryTest()
 
+		this.t1 = new DiscoveryTest()
 
 	},
 	componentWillUnmount(){
@@ -15,35 +15,34 @@ BP3L.Discovery = React.createClass({
 
 	},
 
-	discovery(){
+	start(){
 
-		//BpManagerCordova.startDiscovery((res)=>{
-		//	console.log('startDiscovery Success', res)
-		//}, (res)=>{
-		//	console.log('startDiscovery Fail', res)
-		//}, BP3L.appsecret)
-
-
-		this.t1.emit('start')
+		this.t1.start()
 
 	},
 
 	stop(){
 
-		this.t1.emit('stop')
-
+		this.t1.stop()
 	},
 
 	render() {
 		return <div>
 
 
-			<RB.Button bsStyle="primary" onClick={this.discovery}>
-				Discovery
-			</RB.Button>
-			<RB.Button bsStyle="primary" onClick={this.stop}>
-				Stop
-			</RB.Button>
+			<RB.ButtonToolbar>
+
+				<RB.Button bsStyle="primary" onClick={this.start}>
+					Start Discovery
+				</RB.Button>
+
+
+				<RB.Button bsStyle="primary" onClick={this.stop}>
+					Stop Discovery
+				</RB.Button>
+
+			</RB.ButtonToolbar>
+
 
 		</div>
 	}

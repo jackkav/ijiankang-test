@@ -5,7 +5,7 @@
 FlowRouter.route('/', {
 	action: function(params, queryParams) {
 		console.log("Yeah! We are on the post:", params.postId);
-		ReactLayout.render(BP3L.Discovery)
+		ReactLayout.render(App.AdminIndex)
 
 	}
 });
@@ -13,5 +13,13 @@ FlowRouter.route('/', {
 FlowRouter.route('/discovery', {
 	action: function(params, queryParams) {
 		ReactLayout.render(BP3L.Discovery)
+	}
+});
+
+
+
+FlowRouter.route('/admin', {
+	action: function(params, queryParams) {
+		ReactLayout.render(App.AdminIndex)
 	}
 });
