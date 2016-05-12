@@ -18,5 +18,5 @@ Schema.APItestInfo = new SimpleSchema([Schema.Base, {
 
 }])
 
-DB.APItest = new Mongo.Collection('APItestInfo')
+DB.APItest = new Mongo.Collection('APItest')
 DB.APItest.attachSchema(Schema.APItestInfo)

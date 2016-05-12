@@ -4,6 +4,8 @@ BP3L.APItest = React.createClass({
 
   componentWillMount(){
 		this.APItest = new APIDiscovery();
+
+    this.APIConnect = new APIConnect();
 	},
 
   discovery() {
@@ -12,6 +14,10 @@ BP3L.APItest = React.createClass({
 
   stop() {
     this.APItest.stop();
+  },
+
+  connect() {
+    this.APIConnect.connect();
   },
 
   render() {
@@ -23,6 +29,11 @@ BP3L.APItest = React.createClass({
 			<RB.Button bsStyle="primary" onClick={this.stop}>
 				StopDiscovery API
 			</RB.Button>
+
+      <RB.Button bsStyle="primary" onClick={this.connect}>
+				Connect API
+			</RB.Button>
+
 
 		</div>
 	}
