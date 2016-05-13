@@ -5,6 +5,7 @@ class APIConnect extends EventEmitter {
 
 	  this.initEvent()
 		this.data = {}
+		this.stopDiscoverySuccess = false;
 	}
 
 	initEvent(){
@@ -19,7 +20,20 @@ class APIConnect extends EventEmitter {
 		}, BP3L.appsecret)
   }
 
-  discoveryPromise(lastId) {
+
+	stopDiscoveryPromise() {
+		return new Promise((resolve, reject)=>{
+			BpManagerCordova.stopDiscovery((res)=>{
+	      console.log('stop discovery!');
+				resolve();
+			},(err)=>{
+				console.log('Cordvoa Error: ', err);
+				reject();
+			}, BP3L.appsecret)
+		})
+	}
+
+  discoveryPromise(deviceId) {
 		let self = this;
 		let deviceInfo = h.getDeviceInfo();
 		let apiType = 'discovery';
@@ -33,18 +47,22 @@ class APIConnect extends EventEmitter {
 
         let device = BP3L.parseJSON(res);
 				console.log('Searching', res);
-        if( !lastId || device.address && device.address.substr(-4) === lastId){
+        if( !deviceId || device.address && device.address === deviceId){
 
 					self.data.discoverySuccessTime = +new Date();
           this.stopDiscovery();
+					this.stopDiscoverySuccess = true;
 
+					let status = 'success';
           let device = BP3L.parseJSON(res);
+					let data = self.data;
 
+					DB.APItest.insert({deviceInfo, apiType, status, data});
           resolve(device.address);
 
 					console.log('Discovery success', device.address);
 
-        }else if(device && device.msg === 'DiscoveryDone'){
+        }else if(device && device.msg === 'DiscoveryDone' && !this.stopDiscoverySuccess){
 
 					self.data.discoveryFailureTime = +new Date();
 					let status = 'failure';
@@ -103,13 +121,12 @@ class APIConnect extends EventEmitter {
   }
 
 
-	connectPromise() {
+	connectPromise(deviceId) {
 
-		let lastId = '8966';
 		let self = this;
 		return new Promise((resolve, reject)=>{
 
-	    self.discoveryPromise(lastId).then((macId)=>{
+	    self.discoveryPromise(deviceId).then((macId)=>{
 
 	      let deviceInfo = h.getDeviceInfo();
 	  		let apiType = 'connect';
@@ -120,6 +137,8 @@ class APIConnect extends EventEmitter {
 	      BpManagerCordova.connectDevice((res)=>{
 
 	        let device = BP3L.parseJSON(res);
+
+					console.log(`connect status ${ device && device.msg }`);
 
 	        if(device && device.msg === 'Connected') {
 
@@ -287,6 +306,49 @@ class APIConnect extends EventEmitter {
 
 		})
 	}
+
+
+	disConnectTest(macId) {
+
+		console.log('Disconnect start');
+
+		let deviceInfo = h.getDeviceInfo();
+		let apiType = 'dis-connect';
+
+		BpManagerCordova.disConnectDevice((res)=>{
+			console.log('Disconnect callback success!', res);
+		}, (error)=>{
+			console.log('Cordvoa Error: ', error);
+		}, BP3L.appsecret, macId);
+
+
+		BpManagerCordova.setDisconnectCallback((res)=>{
+
+			let device = BP3L.parseJSON(res);
+
+			if(device && device.address === macId) {
+
+				let status = 'success';
+
+				// DB.APItest.insert({deviceInfo, apiType, status});
+
+				console.log('Disconnect success!')
+
+			}else {
+
+				let status = 'failure';
+
+				// DB.APItest.insert({deviceInfo, apiType, status});
+
+				console.log('Disconnect failure!')
+			}
+
+
+		}, (error)=>{
+			console.error('Cordvoa Error: ', error);
+		}, BP3L.appsecret, macId)
+
+  }
 }
 
 

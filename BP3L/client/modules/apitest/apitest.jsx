@@ -2,13 +2,27 @@
 
 let count = 0;
 
+let DEVICE_ID;
+
 BP3L.APItest = React.createClass({
 
   componentWillMount(){
+
 		this.APItest = new APIDiscovery();
 
     this.APIConnect = new APIConnect();
+
+    Meteor.call('bp3l.getAvailableDevice', (err, macId)=>{
+      console.log(macId);
+      DEVICE_ID = macId;
+    })
 	},
+
+  componentWillUnMount() {
+
+    Meteor.call('bp3l.updateAvailableDeviceStatus', DEVICE_ID);
+
+  },
 
   discovery() {
     this.APItest.discovery();
@@ -23,35 +37,41 @@ BP3L.APItest = React.createClass({
   },
 
   disconnect() {
-    let macId = 'D05FB8418966';
-    this.APIConnect.disConnect(macId);
+    // let macId = 'D05FB8418966';
+    this.APIConnect.disConnect(DEVICE_ID);
+  },
+
+  disConnectTest() {
+    // let macId = 'D05FB8418966';
+    this.APIConnect.disConnectTest(DEVICE_ID);
   },
 
   _runAll() {
-    let macId = 'D05FB8418966';
+
     let self = this;
-    // if(count > 1000) {
-    //   return;
-    // }
-    this.APIConnect.connectPromise(macId).then((actualMacId)=>{
+    let reRun = ()=>{
+
+      Meteor.setTimeout(()=>{
+        self._runAll();
+      }, 2000)
+
+    }
+
+    this.APIConnect.connectPromise(DEVICE_ID).then((actualMacId)=>{
 
       let disconnect = () =>{
         self.APIConnect.disconnectPromise(actualMacId).then((successMsg)=>{
-          console.log(successMsg);
-
-          console.log(count);
           count++;
-          self._runAll();
+          console.log(`成功运行${count}次`);
+          reRun();
         }, (err)=>{
-          self._runAll();
-          console.log(err);
+          reRun()
         })
       }
-
       disconnect();
+
     }, (err)=>{
-      console.log(err);
-      self._runAll();
+      reRun()
     })
   },
 
@@ -109,6 +129,10 @@ BP3L.APItest = React.createClass({
 
         <RB.Button bsStyle="primary" style={styles.button} onClick={this._runAll}>
   				Run ALL
+  			</RB.Button>
+
+        <RB.Button bsStyle="primary" style={styles.button} onClick={this.disConnectTest}>
+  				DisconnectTest
   			</RB.Button>
 
       </div>

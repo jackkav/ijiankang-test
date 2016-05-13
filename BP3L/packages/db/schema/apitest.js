@@ -20,6 +20,7 @@ Schema.APItestInfo = new SimpleSchema([Schema.Base, {
   data:{
     type: Object,
     blackbox: true, //todo
+    optional: true
   }
 
 }])
