@@ -27,6 +27,10 @@ Package.onUse(function(api) {
   api.addFiles('schema/apitest.js', ["server", "client"]);
   api.addFiles('schema/bp3l.js', ["server", "client"]);
 
+  //直连
+  api.addFiles('schema/ConnectDirectly.js', ["server", "client"]);
+
+
 
   api.export([
     "DB",

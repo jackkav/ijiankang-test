@@ -34,6 +34,10 @@ App.AdminIndex = React.createClass({
 
 	},
 
+	apitest() {
+		FlowRouter.go('/apitest');
+	},
+
 	render() {
 
 		const navbarInstance = (
@@ -60,45 +64,59 @@ App.AdminIndex = React.createClass({
 			</RB.Navbar>
 		);
 
-		return <div>
+		return <div style={{padding:20}}>
 
-			{navbarInstance}
+			{
+				//navbarInstance
+			}
 
 
+			{
 
-			<BP3L.Discovery />
+				//<BP3L.Discovery />
+				//
+				//
+				//<br/>
 
+
+				//<RB.ButtonToolbar>
+				//	<RB.Button bsStyle="primary" onClick={()=>{
+				//			this.DiscoverAndConnectTestIns.emit('start')
+				//		}}>
+				//		Start DiscoverAndConnect
+				//	</RB.Button>
+				//
+				//
+				//
+				//	<RB.Button bsStyle="primary" onClick={()=>{
+				//			this.DiscoverAndConnectTestIns.emit('stop')
+				//		}}>
+				//		Stop DiscoverAndConnect
+				//	</RB.Button>
+				//
+				//</RB.ButtonToolbar>
+			}
+
+			<br/><br/>
+
+			不停发现,连接,断开一个特定设备<br/>
+			<RB.Button bsStyle="primary" onClick={this.apitest}>
+				APItest
+			</RB.Button>
+
+			<br/><br/><br/><br/><br/><br/><br/>
+			直连测试 不停直连,断开一个特定设备
+			(仅发现一次用于确定id)
 
 			<br/>
 
-			<RB.ButtonToolbar>
-						<RB.Button bsStyle="primary" onClick={()=>{
-							this.DiscoverAndConnectTestIns.emit('start')
-						}}>
-							Start DiscoverAndConnect
-						</RB.Button>
-
-
-
-						<RB.Button bsStyle="primary" onClick={()=>{
-							this.DiscoverAndConnectTestIns.emit('stop')
-						}}>
-							Stop DiscoverAndConnect
-						</RB.Button>
-
-			</RB.ButtonToolbar>
-
-			<br/>
-
-
-			<RB.ButtonToolbar>
 				<RB.Button bsStyle="primary" onClick={()=>{
-							this.ConnectDirectly.emit('start')
+							this.ConnectDirectly.emit('startByDiscoveryOne')
 						}}>
 					Start ConnectDirectly
 				</RB.Button>
 
-
+				<br/><br/>
 
 				<RB.Button bsStyle="primary" onClick={()=>{
 							this.ConnectDirectly.emit('stop')
@@ -106,7 +124,6 @@ App.AdminIndex = React.createClass({
 					Stop ConnectDirectly
 				</RB.Button>
 
-			</RB.ButtonToolbar>
 
 
 

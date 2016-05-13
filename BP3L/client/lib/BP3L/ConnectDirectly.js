@@ -11,7 +11,7 @@
  未考虑 连接超时 断开连接 重新连接
  * */
 
-let DEVICE_ID = '7CEC793A0306'
+let DEVICE_ID = '' //7CEC793A0306
 
 
 class ConnectDirectly extends EventEmitter {
@@ -26,8 +26,56 @@ class ConnectDirectly extends EventEmitter {
 
 		//this.on('continue',this._run)
 
+
+		this.on('startByDiscoveryOne', this.startByDiscoveryOne)
 		this.on('start', this.start)
 		this.on('stop', this.stop)
+
+	}
+
+
+
+	//发现一个设备 之后再进行直连
+	startByDiscoveryOne(){
+		let self = this
+
+		console.log('start startByDiscoveryOne')
+		BpManagerCordova.startDiscovery((res)=>{
+			let device = BP3L.parseJSON(res)
+
+			if (DEVICE_ID) return;
+
+			if(device.msg == "Discovery"){
+
+				if (device.address && device.name === "BP3L") {
+
+					console.log("Discovery device success ", device.address)
+					DEVICE_ID = device.address
+
+					BpManagerCordova.stopDiscovery((res)=>{
+
+					})
+
+					//开启直连
+					self.start()
+
+				}
+
+			}else if(device.msg == "DiscoveryDone"){
+
+				console.log("DiscoveryDone")
+				if(!DEVICE_ID){
+
+						setTimeout(()=>{
+							self.discoveryOne()
+						},2000)
+				}
+
+			}
+
+		},(res)=>{
+			console.log(res)
+		},BP3L.appsecret)
 
 	}
 
@@ -87,22 +135,29 @@ class ConnectDirectly extends EventEmitter {
 
 
 		let data = {
-			type: "DiscoverAndConnect",
-			time1: +new Date()
-
+			type: "ConnectDirectly",
+			startConnectTime: +new Date(),
+			deviceInfo: {...window.device}
 		}
 
 		console.log("begin connectDevice directly ", DEVICE_ID)
 		BpManagerCordova.connectDevice((res)=> {
 
 			console.log('in connectDevice first callback',res)
-			let data = BP3L.parseJSON(res)
+			let dataJSON = BP3L.parseJSON(res)
 
-			if (data.msg == "Connected") {
+
+			data.connectInfo = dataJSON
+
+			if (dataJSON.msg == "Connected") {
 				console.log('connectDevice success', res)
 
-				data.time3 = +new Date()
-				data.result = "success"
+				data.connectSuccessTime = +new Date()
+				data.result = "Connected"
+
+
+				DB.ConnectDirectly.insert(data)
+
 
 				self.detectDisconnect(DEVICE_ID)
 
@@ -112,16 +167,24 @@ class ConnectDirectly extends EventEmitter {
 					self.disConnectDevice(DEVICE_ID)
 
 				}, 2000)
-			} else if (data.msg == "ConnectionFail") {
+			} else if (dataJSON.msg == "ConnectionFail") {
 
 				console.warn('connectDevice ConnectionFail', res)
 
+
+
+				data.connectionFailTime = +new Date()
+				data.result = "ConnectionFail"
+
+				DB.ConnectDirectly.insert(data)
 
 				//开始下一轮
 				if (self.running) {
 					self.nextStartTimer = setTimeout(function () {
 
 						//self.emit("continue")
+
+
 
 						self._run()
 
@@ -139,8 +202,11 @@ class ConnectDirectly extends EventEmitter {
 			console.log('cordova connectDevice error', res)
 
 			//连接失败的回调
-			data.time3 = +new Date()
-			data.result = "failue"
+			data.connectionErrorTime = +new Date()
+			data.result = "error"
+
+			DB.ConnectDirectly.insert(data)
+
 
 		}, BP3L.appsecret, DEVICE_ID)
 

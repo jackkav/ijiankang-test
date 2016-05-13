@@ -105,6 +105,10 @@ BP3L.APItest = React.createClass({
     let styles = this.getCssStyle();
 		return <div>
 
+      <div style={{margin:20,textAlign:'center'}} onClick={()=>{
+        FlowRouter.go('/');
+      }}>返回</div>
+
       <div style={styles.logArea}>
         <textarea style={styles.textArea}>
 
