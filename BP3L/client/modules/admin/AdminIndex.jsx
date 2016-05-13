@@ -13,6 +13,9 @@ App.AdminIndex = React.createClass({
 		this.DiscoverAndConnectTestIns = new DiscoverAndConnectTest()
 
 
+		this.ConnectDirectly = new ConnectDirectly()
+
+
 	},
 	componentWillUnmount(){
 
@@ -45,7 +48,7 @@ App.AdminIndex = React.createClass({
 
 				<RB.Navbar.Collapse>
 					<RB.Nav>
-						<RB.NavItem eventKey={1} href="#">Link</RB.NavItem>
+						<RB.NavItem eventKey={1} href="/apitest">apitest</RB.NavItem>
 						<RB.NavItem eventKey={2} href="#">Link</RB.NavItem>
 
 					</RB.Nav>
@@ -82,6 +85,26 @@ App.AdminIndex = React.createClass({
 						}}>
 							Stop DiscoverAndConnect
 						</RB.Button>
+
+			</RB.ButtonToolbar>
+
+			<br/>
+
+
+			<RB.ButtonToolbar>
+				<RB.Button bsStyle="primary" onClick={()=>{
+							this.ConnectDirectly.emit('start')
+						}}>
+					Start ConnectDirectly
+				</RB.Button>
+
+
+
+				<RB.Button bsStyle="primary" onClick={()=>{
+							this.ConnectDirectly.emit('stop')
+						}}>
+					Stop ConnectDirectly
+				</RB.Button>
 
 			</RB.ButtonToolbar>
 
