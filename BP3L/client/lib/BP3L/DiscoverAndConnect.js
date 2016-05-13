@@ -29,6 +29,56 @@ class DiscoverAndConnectTest extends EventEmitter {
 
 	}
 
+	detectDisconnect(mac, cb_success){
+		let self = this
+
+		console.log("add setDisconnectCallback ",mac)
+		BpManagerCordova.setDisconnectCallback((res)=>{
+			console.log(" in DisconnectCallback  success",res)
+
+
+			//开始下一轮
+			if(self.running){
+				self.nextStartTimer = setTimeout(function(){
+
+					//self.emit("continue")
+
+					self._run()
+
+				},2000)
+			}else{
+				//stop
+				console.log('DiscoverAndConnectTest stopped')
+
+			}
+
+		}, (res)=> {
+
+			//无错误回调  仅cordova才有回调
+			console.log("in DisconnectCallback  error",res)
+
+		}, BP3L.appsecret, mac);
+
+
+	}
+
+	disConnectDevice(mac){
+		let  self = this
+
+		//断开设备 重新开始  仅cordova才有回调
+
+		BpManagerCordova.disConnectDevice((res)=>{
+			console.log('disConnectDevice success',res)
+
+
+		}, (res)=>{
+			//断开连接失败 有回调?
+			console.log('disConnectDevice error',res)
+
+		}, BP3L.appsecret, mac);
+
+	}
+
 	//发现一个设备并连接
 	_run (number){
 		let self = this
@@ -41,69 +91,74 @@ class DiscoverAndConnectTest extends EventEmitter {
 		}
 
 		BpManagerCordova.startDiscovery((res)=>{
-			console.log('startDiscovery success',res)
 
 			data.time2 = +new Date()
 
 			let device = BP3L.parseJSON(res)
-			if (device.address && device.name && device.name === "BP3L") {
 
-				//模拟真实环境  不等回调结束
-				BpManagerCordova.stopDiscovery((res)=>{
-					console.log('stopDiscovery success',res)
-				}, (res)=>{
-					console.log('stopDiscovery error',res)
+			if(device.msg == "Discovery"){
+				console.log('startDiscovery success',res)
 
-				}, BP3L.appsecret)
+				if (device.address && device.name === "BP3L") {
 
+					BpManagerCordova.stopDiscovery((res)=>{
+						console.log('stopDiscovery success',res)
 
-				BpManagerCordova.connectDevice(()=>{
+						console.log('start connectDevice',device.address)
 
-					console.log('connectDevice success',res)
-
-					data.time3 = +new Date()
-					data.result = "success"
-
-					//断开设备 重新开始
-					BpManagerCordova.disConnectDevice((res)=>{
-						console.log('disConnectDevice success',res)
+						BpManagerCordova.connectDevice((res)=>{
 
 
-						//开始下一轮
-						if(self.running){
-							self.nextStartTimer = setTimeout(function(){
+							let data = BP3L.parseJSON(res)
 
-								//self.emit("continue")
+							if(data.msg=="Connected"){
+								console.log('connectDevice success',res)
 
-								self._run()
+								data.time3 = +new Date()
+								data.result = "success"
 
-							},100)
-						}else{
-							//stop
-							console.log('DiscoverAndConnectTest stopped')
+								self.detectDisconnect(device.address)
 
-						}
+								//
+								setTimeout(()=>{
+
+									self.disConnectDevice(device.address)
+
+								},2000)
+							}else if(data.msg=="ConnectionFail"){
+
+								console.warn('connectDevice ConnectionFail',res)
+							}
+
+
+
+
+
+						},()=>{
+							console.log('cordova connectDevice error',res)
+
+							//连接失败的回调
+							data.time3 = +new Date()
+							data.result = "failue"
+
+						},BP3L.appsecret, device.address)
 
 
 
 					}, (res)=>{
-						//断开连接失败 有回调?
-						console.log('disConnectDevice error',res)
+						console.log('stopDiscovery error',res)
+
+					}, BP3L.appsecret)
+
+				}
 
 
-					}, BP3L.appsecret, device.address);
+			}else if(device.msg == "DiscoveryDone"){
 
-
-				},()=>{
-					console.log('connectDevice error',res)
-
-					//连接失败的回调
-					data.time3 = +new Date()
-					data.result = "failue"
-
-				},BP3L.appsecret, device.address)
+					console.log("DiscoveryDone")
 
 			}
+
 
 
 		}, (res)=>{
@@ -128,8 +183,9 @@ class DiscoverAndConnectTest extends EventEmitter {
 
 		console.log('try stop DiscoverAndConnectTest')
 
-		self.running = false
 		clearTimeout(self.nextStartTimer)
+
+		self.running = false
 	}
 
 }
