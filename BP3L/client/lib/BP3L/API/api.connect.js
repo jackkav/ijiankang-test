@@ -14,6 +14,7 @@ class APIConnect extends EventEmitter {
 
   stopDiscovery() {
     BpManagerCordova.stopDiscovery((res)=>{
+			this.stopDiscoverySuccess = false;
       console.log('stop discovery!');
 		},(err)=>{
 			console.log('Cordvoa Error: ', err);
@@ -71,7 +72,9 @@ class APIConnect extends EventEmitter {
 					let content = {deviceInfo, apiType, status, data}
 
 					DB.APItest.insert(content);
-					reject(`Discovery timeout ${lastId}`)
+
+					console.log(`Discovery timeout ${deviceId}`);
+					reject(`Discovery timeout ${deviceId}`)
 				}
 
       }, (err)=>{

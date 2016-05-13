@@ -11,12 +11,12 @@ BP3L.APItest = React.createClass({
 		this.APItest = new APIDiscovery();
 
     this.APIConnect = new APIConnect();
-
-    Meteor.call('bp3l.getAvailableDevice', (err, macId)=>{
-      console.log(macId);
-      DEVICE_ID = macId;
-    })
-	},
+    // Searching for home
+    // Meteor.call('bp3l.getAvailableDevice', (err, macId)=>{
+    //   console.log(macId);
+    //   DEVICE_ID = macId;
+    // })
+  },
 
   componentWillUnMount() {
 
@@ -56,7 +56,7 @@ BP3L.APItest = React.createClass({
       }, 2000)
 
     }
-
+    // let macId = 'D05FB8418966';
     this.APIConnect.connectPromise(DEVICE_ID).then((actualMacId)=>{
 
       let disconnect = () =>{
