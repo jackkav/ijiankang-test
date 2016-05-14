@@ -48,7 +48,7 @@ class APIConnect extends EventEmitter {
 
         let device = BP3L.parseJSON(res);
 				console.log('Searching', res);
-        if( !deviceId || device.address && device.address === deviceId){
+        if( !deviceId && res.msg !== 'Error' || device.address && device.address === deviceId){
 
 					self.data.discoverySuccessTime = +new Date();
           this.stopDiscovery();
