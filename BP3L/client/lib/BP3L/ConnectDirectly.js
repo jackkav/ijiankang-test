@@ -43,6 +43,8 @@ class ConnectDirectly extends EventEmitter {
 		BpManagerCordova.startDiscovery((res)=>{
 			let device = BP3L.parseJSON(res)
 
+			console.log("startByDiscoveryOne 1st callback ", res)
+
 			if (DEVICE_ID) return;
 
 			if(device.msg == "Discovery"){
@@ -67,7 +69,7 @@ class ConnectDirectly extends EventEmitter {
 				if(!DEVICE_ID){
 
 						setTimeout(()=>{
-							self.discoveryOne()
+							self.startByDiscoveryOne()
 						},2000)
 				}
 
@@ -154,7 +156,7 @@ class ConnectDirectly extends EventEmitter {
 
 				data.connectSuccessTime = +new Date()
 				data.result = "Connected"
-
+				data.resultInfo = res
 
 				DB.ConnectDirectly.insert(data)
 
@@ -167,7 +169,7 @@ class ConnectDirectly extends EventEmitter {
 					self.disConnectDevice(DEVICE_ID)
 
 				}, 2000)
-			} else if (dataJSON.msg == "ConnectionFail") {
+			} else if (dataJSON.msg == "ConnectionFail" || dataJSON.msg == "Error") {
 
 				console.warn('connectDevice ConnectionFail', res)
 
@@ -175,6 +177,7 @@ class ConnectDirectly extends EventEmitter {
 
 				data.connectionFailTime = +new Date()
 				data.result = "ConnectionFail"
+				data.resultInfo = res
 
 				DB.ConnectDirectly.insert(data)
 
@@ -204,6 +207,7 @@ class ConnectDirectly extends EventEmitter {
 			//连接失败的回调
 			data.connectionErrorTime = +new Date()
 			data.result = "error"
+			data.resultInfo = res
 
 			DB.ConnectDirectly.insert(data)
 

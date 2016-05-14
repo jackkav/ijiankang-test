@@ -109,38 +109,42 @@ BP3L.APItest = React.createClass({
         FlowRouter.go('/');
       }}>返回</div>
 
-      <div style={styles.logArea}>
-        <textarea style={styles.textArea}>
-
-        </textarea>
-      </div>
-      <div style={styles.buttonGroup}>
-        <RB.Button bsStyle="primary" style={styles.button} onClick={this.discovery}>
-  				Discovery API
-  			</RB.Button>
-  			<RB.Button bsStyle="primary" style={styles.button} onClick={this.stop}>
-  				StopDiscovery API
-  			</RB.Button>
-
-        <RB.Button bsStyle="primary" style={styles.button} onClick={this.connect}>
-  				Connect API
-  			</RB.Button>
-
-        <RB.Button bsStyle="primary" style={styles.button} onClick={this.disconnect}>
-  				Disconnect API
-  			</RB.Button>
-
-
-        <RB.Button bsStyle="primary" style={styles.button} onClick={this._runAll}>
-  				Run ALL
-  			</RB.Button>
-
-        <RB.Button bsStyle="primary" style={styles.button} onClick={this.disConnectTest}>
-  				DisconnectTest
-  			</RB.Button>
-
-      </div>
-
+      <RB.Button bsStyle="primary" style={styles.button} onClick={this._runAll}>
+      	Discover then connect
+      </RB.Button>
+      {
+      //<div style={styles.logArea}>
+      //  <textarea style={styles.textArea}>
+      //
+      //  </textarea>
+      //</div>
+      //<div style={styles.buttonGroup}>
+      //  <RB.Button bsStyle="primary" style={styles.button} onClick={this.discovery}>
+  			//	Discovery API
+  			//</RB.Button>
+  			//<RB.Button bsStyle="primary" style={styles.button} onClick={this.stop}>
+  			//	StopDiscovery API
+  			//</RB.Button>
+      //
+      //  <RB.Button bsStyle="primary" style={styles.button} onClick={this.connect}>
+  			//	Connect API
+  			//</RB.Button>
+      //
+      //  <RB.Button bsStyle="primary" style={styles.button} onClick={this.disconnect}>
+  			//	Disconnect API
+  			//</RB.Button>
+      //
+      //
+      //  <RB.Button bsStyle="primary" style={styles.button} onClick={this._runAll}>
+  			//	Run ALL
+  			//</RB.Button>
+      //
+      //  <RB.Button bsStyle="primary" style={styles.button} onClick={this.disConnectTest}>
+  			//	DisconnectTest
+  			//</RB.Button>
+      //
+      //</div>
+      }
 		</div>
 	}
 })
