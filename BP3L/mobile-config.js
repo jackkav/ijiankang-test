@@ -3,8 +3,8 @@
 
 
 App.info({
-  id: 'com.ihealthlabs.ijiankang.test',
-  name: '爱健康TEST',
+  id: 'com.ihealthlabs.ijiankang.patient.android',
+  name: '爱健康',
   version: '0.0.1',
   buildNumber: '1'
 })

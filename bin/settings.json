@@ -1,8 +1,8 @@
 {
   "public": {
-    "appName": "爱健康TEST",
+    "appName": "爱健康",
     "appDesc": "iJianKang test",
-    "id": "com.ihealthlabs.ijiankang.test",
+    "id": "com.ihealthlabs.ijiankang.patient.android",
     "version": "0.0.1",
     "measureSecret":"148779a50cf3c1c06634c996b54def5e"
   }
