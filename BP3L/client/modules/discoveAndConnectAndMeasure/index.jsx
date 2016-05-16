@@ -99,7 +99,7 @@ BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
 			<title>DiscoveAndConnectAndMeasureTest</title>
 
 
-			<RB.Button bsStyle="primary" onClick={this.goHome}>
+			<RB.Button bsStyle="primary" block onClick={this.goHome}>
 				Home
 			</RB.Button>
 
@@ -110,15 +110,19 @@ BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
 			<select value={this.state.deviceID} onChange ={ this.select}>
 
 				<option value=""></option>
-				<option value="7CEC793A0306">7CEC793A0306</option>
-				<option value="7CEC793A0306">7CEC793A0309</option>
+				<option value="7CEC793A0306">7CEC793A0306-0306</option>
+				<option value="7CEC79E05EFA">7CEC79E05EFA-5EFA</option>
+				<option value="7CEC79E05EFA">7CEC7939E9B9-E9B9</option>
+				<option value="7CEC79E05EFA">7CEC794184DB-84DB</option>
+
+
 			</select>
 
 
 			<hr/>
 
 			Input testID or using provided
-			<input type="text" name="TEST_ID"
+			<input type="text"
 			       value={this.state.testID}
 			       onChange ={ this.testIDChange}
 			       size="50"/>
@@ -130,21 +134,24 @@ BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
 
 
 
-				<RB.Button bsStyle="primary" onClick={this.start}>
+				<RB.Button bsStyle="primary" block onClick={this.start} >
 					Start
 				</RB.Button>
 
 				<br/><br/>
 
-				<RB.Button bsStyle="primary" onClick={this.stop}>
+				<RB.Button bsStyle="primary" block onClick={this.stop} >
 					Stop
 				</RB.Button>
 
 				<br/><br/>
 
-				<RB.Button bsStyle="primary" onClick={this.startByDiscoveryOne}>
-					startByDiscoveryOne
-				</RB.Button>
+			{
+				//<RB.Button bsStyle="primary" block onClick={this.startByDiscoveryOne}>
+				//	startByDiscoveryOne
+				//</RB.Button>
+			}
+
 
 
 
