@@ -26,6 +26,8 @@ Package.onUse(function(api) {
   api.addFiles('schema/result.js', ["server", "client"]);
   api.addFiles('schema/apitest.js', ["server", "client"]);
   api.addFiles('schema/bp3l.js', ["server", "client"]);
+  api.addFiles('schema/IDInfo.js', ["server", "client"]);
+  api.addFiles('schema/sldtest.js', ["server", "client"]);
 
   //直连
   api.addFiles('schema/ConnectDirectly.js', ["server", "client"]);
