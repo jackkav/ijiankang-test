@@ -136,11 +136,6 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			self.log(" in DisconnectCallback  success", res)
 
 
-
-
-
-
-
 			self.disconectTime = +new Date()
 
 			self.saveData()
@@ -171,24 +166,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		setTimeout(function () {
 
 			BpManagerCordova.disConnectDevice((res)=> {
-				self.log('disConnectDevice success', res)
-
-
-				//开始下一轮
-				if (self.running) {
-					self.nextStartTimer = setTimeout(function () {
-
-						//self.emit("continue")
-
-						self._run()
-
-					}, 2000)
-				} else {
-					//stop
-					self.log('DiscoverAndConnectTest stopped')
-
-				}
-
+				self.log('disConnectDevice 1 callback', res)
 
 			}, (res)=> {
 				//断开连接失败 有回调?
@@ -327,14 +305,24 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 			} else if (json && json.msg == 'MeasureDoing') {
 
+
 			} else if (json && json.msg == 'Error') {
-				self.log('袖带太松?',json)
+				self.log('ErrorID',json.errorid)
+
+				self.data.MeasureMsgError = json
 
 				self.disConnectDevice()
 			}
 
 
-		})
+		},function (res) {
+			self.log('start measure fail' + res)
+
+			self.data.MeasureStartError = res
+
+			self.disConnectDevice()
+
+		},BP3L.appsecret, DEVICE_ID)
 
 
 	}
