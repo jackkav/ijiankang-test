@@ -36,7 +36,7 @@ Meteor.methods({
         'status': true
       }
     })
-    
+
     return bp3lList[0].macId;
 
   },
