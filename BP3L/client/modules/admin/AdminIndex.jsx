@@ -124,8 +124,15 @@ App.AdminIndex = React.createClass({
 					Stop ConnectDirectly
 				</RB.Button>
 
+			<br/>
+			<br/>
+			<br/>
 
 
+			<a href="/DiscoveAndConnectAndMeasurePage">
+				<RB.Button bsStyle="primary">DiscoveAndConnectAndMeasure</RB.Button>
+
+			</a>
 
 		</div>
 	}

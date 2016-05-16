@@ -27,3 +27,10 @@ FlowRouter.route('/apitest', {
 		ReactLayout.render(BP3L.APItest)
 	}
 });
+
+
+FlowRouter.route('/DiscoveAndConnectAndMeasurePage', {
+	action: function(params, queryParams) {
+		ReactLayout.render(BP3L.DiscoveAndConnectAndMeasurePage)
+	}
+});
