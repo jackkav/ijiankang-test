@@ -100,37 +100,44 @@ App.AdminIndex = React.createClass({
 			<br/><br/>
 
 			不停发现,连接,断开一个特定设备<br/>
-			<RB.Button bsStyle="primary" onClick={this.apitest}>
+			<RB.Button bsStyle="primary" onClick={this.apitest} block>
 				APItest
 			</RB.Button>
 
-			<br/><br/><br/><br/><br/><br/><br/>
-			直连测试 不停直连,断开一个特定设备
-			(仅发现一次用于确定id)
+			{
 
-			<br/>
+			//	<br/><br/><br/><br/><br/><br/><br/>
+			//	直连测试 不停直连,断开一个特定设备
+			//	(仅发现一次用于确定id)
+			//
+			//	<br/>
+			//
+			//	<RB.Button bsStyle="primary" onClick={()=>{
+			//	this.ConnectDirectly.emit('startByDiscoveryOne')
+			//}}>
+			//	Start ConnectDirectly
+			//	</RB.Button>
+			//
+			//	<br/><br/>
+			//
+			//	<RB.Button bsStyle="primary" onClick={()=>{
+			//	this.ConnectDirectly.emit('stop')
+			//}}>
+			//	Stop ConnectDirectly
+			//	</RB.Button>
+			//
 
-				<RB.Button bsStyle="primary" onClick={()=>{
-							this.ConnectDirectly.emit('startByDiscoveryOne')
-						}}>
-					Start ConnectDirectly
-				</RB.Button>
 
-				<br/><br/>
+			}
 
-				<RB.Button bsStyle="primary" onClick={()=>{
-							this.ConnectDirectly.emit('stop')
-						}}>
-					Stop ConnectDirectly
-				</RB.Button>
-
-			<br/>
-			<br/>
-			<br/>
+				<br/>
+				<br/>
+				<br/>
 
 
-			<a href="/DiscoveAndConnectAndMeasurePage">
-				<RB.Button bsStyle="primary">DiscoveAndConnectAndMeasure</RB.Button>
+			直连测试
+			<a href="/DiscoveAndConnectAndMeasurePage" >
+				<RB.Button bsStyle="primary" block>DiscoveAndConnectAndMeasure</RB.Button>
 
 			</a>
 

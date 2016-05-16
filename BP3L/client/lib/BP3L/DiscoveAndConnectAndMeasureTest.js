@@ -23,6 +23,8 @@
 let DEVICE_ID = ''
 //let DEVICE_ID = '7CEC793A0306'
 
+let DISCOVERY_TIME = 2
+
 
 class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
@@ -32,8 +34,23 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		this.reactiveInfo = new ReactiveVar()
 
+		this.reactiveData = new ReactiveVar({
+			runOrder:0,
+			runSuccess:0,
+			runFailure:0
+
+		})
+
 
 		this.initEvent()
+	}
+
+	updateReactiveData(obj){
+		let data ={}
+		Object.assign(data,this.reactiveData.get(),obj)
+
+		this.reactiveData.set(data)
+
 	}
 
 	log(value){
@@ -53,51 +70,6 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 	}
 
 
-	//发现一个设备 之后再进行直连
-	startByDiscoveryOne() {
-		let self = this
-
-		self.log('start startByDiscoveryOne')
-		BpManagerCordova.startDiscovery((res)=> {
-			let device = BP3L.parseJSON(res)
-
-			self.log("startByDiscoveryOne 1st callback ", res)
-
-			if (DEVICE_ID) return;
-
-			if (device.msg == "Discovery") {
-
-				if (device.address && device.name === "BP3L") {
-
-					self.log("Discovery device success ", device.address)
-					DEVICE_ID = device.address
-
-					BpManagerCordova.stopDiscovery((res)=> {
-
-					})
-
-					//开启直连
-					self.start()
-
-				}
-
-			} else if (device.msg == "DiscoveryDone") {
-
-				self.log("DiscoveryDone")
-				if (!DEVICE_ID) {
-
-					setTimeout(()=> {
-						self.startByDiscoveryOne()
-					}, 2000)
-				}
-
-			}
-
-		}, (res)=> {
-			self.log(res)
-		}, BP3L.appsecret)
-
-	}
 
 	tryRestart(){
 		let self= this;
@@ -105,7 +77,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		//限制运行次数
 		//self._runtimes++
-		if(self._runtimes>=20){
+		if(self._runtimes > 20){
 			self.running= false
 
 			return;
@@ -131,12 +103,16 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 	detectDisconnect(mac, cb_success) {
 		let self = this
 
-		self.log("add setDisconnectCallback ", mac)
+		self.log("add setDisconnectCallback "+ mac)
 		BpManagerCordova.setDisconnectCallback((res)=> {
-			self.log(" in DisconnectCallback  success", res)
+			self.log(" in setDisconnectCallback 1st callback "+ res)
+			var json = BP3L.parseJSON(res);
 
+			self.data.disconnect={}
+			self.data.disconnect.time = +new Date()
+			self.data.disconnect.info = json
 
-			self.disconectTime = +new Date()
+			self.data.result={type:"success"}
 
 			self.saveData()
 
@@ -145,7 +121,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		}, (res)=> {
 
 			//无错误回调  仅cordova才有回调
-			self.log("in DisconnectCallback  error", res)
+			self.log("in setDisconnectCallback 2st callback  error "+ res)
 
 		}, BP3L.appsecret, mac);
 
@@ -160,17 +136,15 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		self.detectDisconnect(DEVICE_ID)
 
-
-
 		//总时间应超过8s ios
 		setTimeout(function () {
 
 			BpManagerCordova.disConnectDevice((res)=> {
-				self.log('disConnectDevice 1 callback', res)
+				self.log('disConnectDevice 1 callback '+ res)
 
 			}, (res)=> {
 				//断开连接失败 有回调?
-				self.log('disConnectDevice error', res)
+				self.log('disConnectDevice 2 callback error'+ res)
 
 			}, BP3L.appsecret, DEVICE_ID);
 
@@ -197,8 +171,12 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		num = num || 1
 
 		if(num>2){
-			self.log('tryConnect failure '+num + ' times')
+
+			self.data.result={type:'connectFailure'}
 			self.saveData()
+
+			//失败1次
+			self.updateReactiveData({runFailure: self.updateReactiveData.get().runFailure+1})
 
 			self.tryRestart()
 
@@ -206,26 +184,34 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		}
 
 		self.connectTimer = setTimeout(function(){
-			self.log('connectTimeout_'+num)
+			//异常情况
+
 			//纪录连接超时
-			self.data['connectTimeout_'+num] =+new Date()
+			self.log('connectTimeout_'+num)
+			data['connectTimeout_'+num] =+new Date()
+
+			data.connectFallBackToSetTimeout= 25000
+
+			self.data.connectData[num] = data
 
 			self.tryConnect(num+1)
 
 		},25000)
 
-		self.log("begin connectDevice directly "+num, DEVICE_ID)
+		self.log("begin connectDevice directly "+num +'  ' +DEVICE_ID)
+
+		data['connectStartTime'] =+new Date()
 		BpManagerCordova.connectDevice((res)=> {
 			clearTimeout(self.connectTimer)
 
-			self.log('in connectDevice first callback', res)
+			self.log('in connectDevice first callback '+ res)
 			let dataJSON = BP3L.parseJSON(res)
 
 
 			data.connectInfo = dataJSON
 
 			if (dataJSON.msg == "Connected") {
-				self.log('connectDevice success', res)
+				self.log('connectDevice success '+ res)
 
 				data.connectSuccessTime = +new Date()
 				data.result = "Connected"
@@ -247,7 +233,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 				console.warn('connectDevice ConnectionFail '+num, res)
 
 
-				data.connectionFailTime = +new Date()
+				data.connectFailTime = +new Date()
 				data.result = "ConnectionFail"
 				data.resultInfo = res
 
@@ -270,10 +256,10 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 
 		}, (res)=> {
-			self.log('cordova connectDevice error '+num, res)
+			self.log('cordova connectDevice error '+num + ' ' + res)
 
 			//连接失败的回调
-			data.connectionErrorTime = +new Date()
+			data.connectErrorTime = +new Date()
 			data.result = "error"
 			data.resultInfo = res
 
@@ -294,31 +280,43 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 	tryMeasure() {
 		let self = this
+		let data ={}
+		self.data.measure = data
 
+		data.startTime = + new Date()
 		BpManagerCordova.startMeasure(function (res) {
 			var json = BP3L.parseJSON(res);
 
 			if ((json.msg == 'ZeroDoing' || json.msg == 'ZeroDone')) {
 
 			} else if (json && json.msg == 'MeasureDone') {
+				self.log('MeasureDone '+res)
 
+				data.endTime = + new Date()
+				data.endType = 'Success'
+				self.endInfo = json
+				self.disConnectDevice()
 
 			} else if (json && json.msg == 'MeasureDoing') {
 
 
 			} else if (json && json.msg == 'Error') {
-				self.log('ErrorID',json.errorid)
+				self.log('ErrorID '+json.errorid)
 
-				self.data.MeasureMsgError = json
+				data.endTime = + new Date()
+				data.endType = 'Error'
+				self.endInfo = res
 
 				self.disConnectDevice()
 			}
 
 
 		},function (res) {
-			self.log('start measure fail' + res)
+			self.log('start measure fail ' + res)
 
-			self.data.MeasureStartError = res
+			data.endTime = + new Date()
+			data.endType = 'StartFailure'
+			self.endInfo = res
 
 			self.disConnectDevice()
 
@@ -336,15 +334,75 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			sessionID:"sessionId_"+ (+new Date()),
 
 			type: "DiscoveAndConnectAndMeasureTest",
-			startConnectTime: +new Date(),
+			runStartTime: +new Date(),
 			deviceInfo: {...window.device},
 			connectData:{}    //连接信息
 		}
 
-		self.log('DiscoveAndConnectAndMeasureTest run '+self._runtimes)
+		self.log('[[[==='+self._runtimes+'===]]] Run DiscoveAndConnectAndMeasureTest')
 
+		self.reactiveData.set(
+			_.extend(self.reactiveData.get(),{runOrder:self._runtimes})
+		)
 
 		self.tryConnect()
+
+	}
+
+
+	//发现一个设备 之后再进行直连
+	startByDiscoveryOne(deviceID) {
+		let self = this
+
+		self.log('start startByDiscoveryOne '+ deviceID)
+		BpManagerCordova.startDiscovery((res)=> {
+			let device = BP3L.parseJSON(res)
+
+			self.log("startByDiscoveryOne 1st callback "+ res)
+
+			if (device.msg == "Discovery") {
+
+				if (device.address==deviceID && device.name === "BP3L" ) {
+
+					self.DiscoverySuccess = true
+
+					self.log("Discovery device success "+ device.address)
+
+					BpManagerCordova.stopDiscovery((res)=> {
+
+					})
+
+					//开启直连
+					self._run()
+
+				}
+
+			} else if (device.msg == "DiscoveryDone") {
+
+				self.log("DiscoveryDone")
+
+
+				if (!self.DiscoverySuccess) {
+
+					if(self.discoveryTime > DISCOVERY_TIME){
+						setTimeout(()=> {
+							self.startByDiscoveryOne(deviceID)
+						}, 2000)
+						self.discoveryTime++
+
+					}else{
+						alert('Discovery Device failue '+ deviceID)
+
+					}
+
+
+				}
+
+			}
+
+		}, (res)=> {
+			self.log(res)
+		}, BP3L.appsecret)
 
 	}
 
@@ -355,7 +413,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		self.running = true
 		self._runtimes = 1
 
-		this.log('DiscoveAndConnectAndMeasureTest start ', testID,deviceID)
+		this.log('DiscoveAndConnectAndMeasureTest start '+ testID,deviceID)
 
 
 		self.testID = testID
@@ -363,7 +421,12 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		DEVICE_ID = deviceID
 
 
-		self._run()
+		self.DiscoverySuccess = false
+		self.discoveryTime = 1
+
+
+		//self._run()
+		self.startByDiscoveryOne(deviceID)
 	}
 
 	stop() {
