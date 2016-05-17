@@ -175,7 +175,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 		if(num>2){
 
-			self.data.result={type:'connectFailure'}
+			self.data.runResult={type:'connectFailure'}
 			self.saveData()
 
 			//失败1次
