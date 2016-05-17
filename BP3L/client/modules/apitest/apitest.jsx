@@ -205,7 +205,7 @@ BP3L.APItest = React.createClass({
     let reRun = ()=>{
 
     Meteor.setTimeout(()=>{
-        self.data = {};
+        self.SLDTest.data = {};
         self.runSLD20(true);
       }, 2000)
 
@@ -225,23 +225,35 @@ BP3L.APItest = React.createClass({
       return this.SLDTest.tryMeasurePromise(actualMacId, sessionId, testId);
 
     }).then(()=>{
-      let disconnect = () =>{
-        self.SLDTest.disconnectPromise(actualMacId, sessionId, testId).then((successMsg)=>{
-          sldCount++;
-          sldSuccessCount++;
-          console.log(`第${sldCount}运行次成功`);
-          this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
-          reRun();
-        }, (err)=>{
-          reRun()
-        })
-      }
-      disconnect();
+      // let disconnect = () =>{
+      //   self.SLDTest.disconnectPromise(actualMacId, sessionId, testId).then((successMsg)=>{
+      //     sldCount++;
+      //     sldSuccessCount++;
+      //     console.log(`第${sldCount}运行次成功`);
+      //     this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
+      //     reRun();
+      //   }, (err)=>{
+      //     reRun()
+      //   })
+      // }
+      // disconnect();
+
+      return self.SLDTest.disconnectPromise(actualMacId, sessionId, testId);
+    }).then(()=>{
+
+      sldCount++;
+      sldSuccessCount++;
+      console.log(`第${sldCount}运行次成功`);
+      this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
+      reRun();
+
     }).catch((err)=>{
+
       sldCount++;
       console.log(`第${sldCount}次运行失败`);
       this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行失败 @@@@@@@@ `);
-      reRun()
+      reRun();
+      
     })
 
   },
