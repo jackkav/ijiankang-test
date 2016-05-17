@@ -131,7 +131,7 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 				<div>选择/创建一个TestId</div>
 
 				<div style={{display:'flex',alignItems:'center'}}>
-					<select style={{padding: '5px'}} onChange={this.selectTestId} value={this.state.testId} size="50">
+					<select style={{padding: '5px'}} onChange={this.selectTestId} value={this.state.testId} >
 						<option value=''></option>
 						{this.data.idInfos.map((item, key)=>{
 							let manufacturerVersion = item.deviceInfo ? `${item.deviceInfo.manufacturer} ${item.deviceInfo.version}` : '';
