@@ -163,7 +163,9 @@ BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
 
 			<hr/>
 
-			运行:  {this.data.reactiveData.runOrder} 已成功: 已失败:
+			运行:   {this.data.reactiveData.runOrder}
+			已成功: {this.data.reactiveData.runSuccess}
+			已失败: {this.data.reactiveData.runFailure}
 			<div>
 				testID:{this.state.testID}<br/>
 				deviceID: {this.state.deviceID} <br/>

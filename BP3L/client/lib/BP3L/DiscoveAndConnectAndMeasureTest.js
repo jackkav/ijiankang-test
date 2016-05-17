@@ -36,6 +36,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		this.reactiveData = new ReactiveVar({
 			runOrder:0,
+			runAll:0,
 			runSuccess:0,
 			runFailure:0
 
@@ -84,6 +85,8 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			let disconnectData = {}
 			disconnectData.info = json
 
+			self._runAllCount++
+
 			if(json.msg == 'Disconnect' && json.address== mac){
 
 				 self.data.timeData['disconnectSuccessTime'] = disconnectData.time=  +new Date()
@@ -91,6 +94,10 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 				//整体结果
 				self.data.runResult={type:"success"}
+
+				//成功次数++
+				self.updateReactiveData({runSuccess: self.reactiveData.get().runSuccess+1})
+
 
 			}else{
 
@@ -100,7 +107,12 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 				self.data.runResult={type:"disconenctFailure"}
 
+				self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
+
+
 			}
+
+
 
 			self.saveData()
 
@@ -167,7 +179,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			self.saveData()
 
 			//失败1次
-			self.updateReactiveData({runFailure: self.updateReactiveData.get().runFailure+1})
+			self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
 
 			self.tryRestart()
 
@@ -420,6 +432,8 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		var self = this
 		self.running = true
 		self._runtimes = 1
+		self._runAllCount=0
+		self._runSuccessCount=0
 
 		this.log('DiscoveAndConnectAndMeasureTest start '+ testID,deviceID)
 
