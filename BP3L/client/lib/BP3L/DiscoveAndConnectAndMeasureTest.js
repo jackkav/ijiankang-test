@@ -71,36 +71,9 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 
 
-	tryRestart(){
-		let self= this;
 
 
-		//限制运行次数
-		//self._runtimes++
-		if(self._runtimes > 20){
-			self.running= false
-
-			return;
-		}
-
-		//开始下一轮
-		if (self.running) {
-			self.nextStartTimer = setTimeout(function () {
-
-				//self.emit("continue")
-
-				self._run()
-
-			}, 2000)
-		} else {
-			//stop
-			self.log('DiscoverAndConnectTest stopped')
-
-		}
-
-	}
-
-	detectDisconnect(mac, cb_success) {
+	detectDisconnect(mac) {
 		let self = this
 
 		self.log("add setDisconnectCallback "+ mac)
@@ -108,15 +81,31 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			self.log(" in setDisconnectCallback 1st callback "+ res)
 			var json = BP3L.parseJSON(res);
 
-			self.data.disconnect={}
-			self.data.disconnect.time = +new Date()
-			self.data.disconnect.info = json
+			let disconnectData = {}
+			disconnectData.info = json
 
-			self.data.result={type:"success"}
+			if(json.msg == 'Disconnect' && json.address== mac){
+
+				 self.data.timeData['disconnectSuccessTime'] = disconnectData.time=  +new Date()
+				 self.data.timeData['runEndTime'] =self.data.timeData['disconnectSuccessTime']
+
+				//整体结果
+				self.data.runResult={type:"success"}
+
+			}else{
+
+				//never happen?
+				self.data.timeData['disconnectFailureTime'] = disconnectData.time=  +new Date()
+				self.data.timeData['runEndTime'] = self.data.timeData['disconnectFailureTime']
+
+				self.data.runResult={type:"disconenctFailure"}
+
+			}
 
 			self.saveData()
 
 			self.tryRestart()
+
 
 		}, (res)=> {
 
@@ -138,6 +127,8 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		//总时间应超过8s ios
 		setTimeout(function () {
+
+			self.data.timeData['disconnectStartTime'] = +new Date()
 
 			BpManagerCordova.disConnectDevice((res)=> {
 				self.log('disConnectDevice 1 callback '+ res)
@@ -188,7 +179,8 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 			//纪录连接超时
 			self.log('connectTimeout_'+num)
-			data['connectTimeout_'+num] =+new Date()
+
+			self.data.timeData['connectTimeout_'+num] = data['connectTimeout_'+num] = +new Date()
 
 			data.connectFallBackToSetTimeout= 25000
 
@@ -200,7 +192,10 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		self.log("begin connectDevice directly "+num +'  ' +DEVICE_ID)
 
-		data['connectStartTime'] =+new Date()
+
+		self.data.timeData['connectStartTime_'+num] = data['connectStartTime'] =+new Date()
+
+
 		BpManagerCordova.connectDevice((res)=> {
 			clearTimeout(self.connectTimer)
 
@@ -213,14 +208,13 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			if (dataJSON.msg == "Connected") {
 				self.log('connectDevice success '+ res)
 
-				data.connectSuccessTime = +new Date()
+				self.data.timeData['connectSuccessTime_'+num] = data.connectSuccessTime = +new Date()
+
 				data.result = "Connected"
 				data.resultInfo = res
 
 				//DB.ConnectDirectly.insert(data)
 				self.data.connectData[num] = data
-
-
 
 
 				//连接成功  开始加压
@@ -232,8 +226,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 				console.warn('connectDevice ConnectionFail '+num, res)
 
-
-				data.connectFailTime = +new Date()
+				self.data.timeData['connectFailTime_'+num] = data.connectFailTime = +new Date()
 				data.result = "ConnectionFail"
 				data.resultInfo = res
 
@@ -259,7 +252,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			self.log('cordova connectDevice error '+num + ' ' + res)
 
 			//连接失败的回调
-			data.connectErrorTime = +new Date()
+			self.data.timeData['connectErrorTime_'+num] = data.connectErrorTime = +new Date()
 			data.result = "error"
 			data.resultInfo = res
 
@@ -283,29 +276,35 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		let data ={}
 		self.data.measure = data
 
-		data.startTime = + new Date()
+		self.data.timeData['measureStartTime'] = data.startTime = + new Date()
 		BpManagerCordova.startMeasure(function (res) {
 			var json = BP3L.parseJSON(res);
 
-			if ((json.msg == 'ZeroDoing' || json.msg == 'ZeroDone')) {
+			if (json.msg == 'ZeroDoing') {
+
+			}else if(json.msg == 'ZeroDone'){
+				self.data.timeData['measureZeroDoneTime']= + new Date()
+
 
 			} else if (json && json.msg == 'MeasureDone') {
 				self.log('MeasureDone '+res)
 
-				data.endTime = + new Date()
+				self.data.timeData['measureDoneTime']= data.endTime = + new Date()
+
 				data.endType = 'Success'
-				self.endInfo = json
+				data.endInfo = json
 				self.disConnectDevice()
 
 			} else if (json && json.msg == 'MeasureDoing') {
-
+					self.log('MeasureDoing '+res)
 
 			} else if (json && json.msg == 'Error') {
 				self.log('ErrorID '+json.errorid)
 
-				data.endTime = + new Date()
+
+				self.data.timeData['measureErrorTime'] = data.endTime = + new Date()
 				data.endType = 'Error'
-				self.endInfo = res
+				data.endInfo = json
 
 				self.disConnectDevice()
 			}
@@ -316,7 +315,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 			data.endTime = + new Date()
 			data.endType = 'StartFailure'
-			self.endInfo = res
+			data.endInfo = res
 
 			self.disConnectDevice()
 
@@ -334,10 +333,16 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			sessionID:"sessionId_"+ (+new Date()),
 
 			type: "DiscoveAndConnectAndMeasureTest",
-			runStartTime: +new Date(),
+			//runStartTime: +new Date(),
 			deviceInfo: {...window.device},
-			connectData:{}    //连接信息
+			connectData:{},    //连接信息
+			//纪录所有时间
+			timeData:{
+				runsSartTime: +new Date(),
+			}
 		}
+
+
 
 		self.log('[[[==='+self._runtimes+'===]]] Run DiscoveAndConnectAndMeasureTest')
 
@@ -347,6 +352,9 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		self.tryConnect()
 
+	}
+	addTime(key, value){
+		self.timeData[key] = value
 	}
 
 
@@ -446,6 +454,34 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		self.running = false
 	}
 
+	tryRestart(){
+		let self= this;
+
+
+		//限制运行次数
+		//self._runtimes++
+		if(self._runtimes > 20){
+			self.running= false
+
+			return;
+		}
+
+		//开始下一轮
+		if (self.running) {
+			self.nextStartTimer = setTimeout(function () {
+
+				//self.emit("continue")
+
+				self._run()
+
+			}, 2000)
+		} else {
+			//stop
+			self.log('DiscoverAndConnectTest stopped')
+
+		}
+
+	}
 }
 
 
