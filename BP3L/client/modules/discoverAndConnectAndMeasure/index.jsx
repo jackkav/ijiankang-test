@@ -159,14 +159,13 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 				<select value={this.state.deviceId} onChange ={ this.selectDevice}>
 
 					<option value=""></option>
-					<option value="7CEC793A0306">7CEC793A0306-0306</option>
-					<option value="7CEC79E05EFA">7CEC79E05EFA-5EFA</option>
-					<option value="7CEC7939E9B9">7CEC7939E9B9-E9B9</option>
-					<option value="7CEC794184DB">7CEC794184DB-84DB</option>
-					<option value="D05FB8418966">D05FB8418966-8966</option>
-					<option value="7CEC79E06244">7CEC79E06244-6244</option>
 
+					{
+						App.devices.map(function(item){
+							return <option value={item}>{item}-{item.slice(-4)}</option>
 
+						})
+					}
 
 
 				</select>
