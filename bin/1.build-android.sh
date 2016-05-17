@@ -1,9 +1,8 @@
 #!/bin/bash
-
 source ./env.sh
-
 cd $APP_PATH
 
+rm -rf .meteor/local
 meteor build $BUILD_PATH \
   --mobile-settings $MOBILE_SETTINGS \
   --server $MOBILE_SERVER
