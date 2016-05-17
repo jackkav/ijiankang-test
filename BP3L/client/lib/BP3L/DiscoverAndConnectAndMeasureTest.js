@@ -223,7 +223,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 				self.data.timeData['connectSuccessTime_'+num] = data.connectSuccessTime = +new Date()
 
 				data.result = "Connected"
-				data.resultInfo = res
+				data.resultInfo = dataJSON
 
 				//DB.ConnectDirectly.insert(data)
 				self.data.connectData[num] = data
@@ -240,7 +240,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 				self.data.timeData['connectFailTime_'+num] = data.connectFailTime = +new Date()
 				data.result = "ConnectionFail"
-				data.resultInfo = res
+				data.resultInfo = dataJSON
 
 				//DB.ConnectDirectly.insert(data)
 
@@ -266,7 +266,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 			//连接失败的回调
 			self.data.timeData['connectErrorTime_'+num] = data.connectErrorTime = +new Date()
 			data.result = "error"
-			data.resultInfo = res
+			data.resultInfo = dataJSON
 
 			//DB.ConnectDirectly.insert(data)
 			self.data.connectData[num] = data
