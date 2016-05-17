@@ -27,5 +27,9 @@ Meteor.methods({
 
   },
 
+  'idInfo.createTestId': (testId, testType, deviceInfo) =>{
+    DB.IDInfo.insert({testId, testType, deviceInfo})
+  },
+
 
 })

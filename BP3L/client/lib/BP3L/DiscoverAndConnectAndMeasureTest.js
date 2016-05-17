@@ -342,7 +342,8 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 		self.data = {
 			testId:self.testID,
 			macId:self.deviceID,
-			sessionId:"sessionId_"+ (+new Date()),
+			//sessionId:"sessionId_"+ (+new Date()),
+			sessionId:self.sessionID,
 
 			type: "DiscoverAndConnectAndMeasureTest",
 			//runStartTime: +new Date(),
@@ -428,7 +429,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 
-	start(testID, deviceID) {
+	start(testID, sessionID, deviceID) {
 		var self = this
 		self.running = true
 		self._runtimes = 1
@@ -439,6 +440,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 		self.testID = testID
+		self.sessionID = sessionID
 		self.deviceID = deviceID
 		DEVICE_ID = deviceID
 
@@ -462,6 +464,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 		self.testID = ''
+		self.sessionID=''
 		self.deviceID = ''
 		DEVICE_ID = ''
 

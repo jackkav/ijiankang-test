@@ -34,3 +34,9 @@ FlowRouter.route('/DiscoverAndConnectAndMeasurePage', {
 		ReactLayout.render(BP3L.DiscoverAndConnectAndMeasurePage)
 	}
 });
+
+FlowRouter.route('/DiscoverAndConnectAndMeasureAdminPage', {
+	action: function(params, queryParams) {
+		ReactLayout.render(BP3L.DiscoverAndConnectAndMeasureAdminPage)
+	}
+});
