@@ -119,6 +119,7 @@ BP3L.APItest = React.createClass({
 
     count = 0;
     sldCount = 0;
+    sldSuccessCount = 0;
   },
 
   discovery() {
@@ -173,7 +174,7 @@ BP3L.APItest = React.createClass({
   },
 
 
-  runSLD20(notClickFlag) {
+  runSLD20(e, notClickFlag) {
 
     if(!notClickFlag) {
       sldCount = 0;
@@ -206,7 +207,7 @@ BP3L.APItest = React.createClass({
 
     Meteor.setTimeout(()=>{
         self.SLDTest.data = {};
-        self.runSLD20(true);
+        self.runSLD20(null,true);
       }, 2000)
 
     }
@@ -253,7 +254,7 @@ BP3L.APItest = React.createClass({
       console.log(`第${sldCount}次运行失败`);
       this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行失败 @@@@@@@@ `);
       reRun();
-      
+
     })
 
   },
