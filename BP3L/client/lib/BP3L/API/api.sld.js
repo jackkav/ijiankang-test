@@ -74,8 +74,8 @@ class SLDTest extends EventEmitter {
         BpManagerCordova.startDiscovery((res)=>{
 
           let device = BP3L.parseJSON(res);
-          console.log('Searching', res);
-          self.pushInfoToReact(`Searching${res}`)
+          console.log('Searching', res, BP3L.appsecret);
+          self.pushInfoToReact(`Searching${res} BP3L.appsecret ${BP3L.appsecret}`)
 
           let flagRandom = device && device.address && (MACID_LIST.indexOf(device.address) !== -1) && !deviceId;
           let flagSpecial = device && device.address && device.address === deviceId;
@@ -150,8 +150,8 @@ class SLDTest extends EventEmitter {
       let deviceInfo = h.getDeviceInfo();
   		let apiType = 'connect';
 
-			console.log(`Start connect ${macId}`);
-      self.pushInfoToReact(`Start connect ${macId}`);
+			console.log(`Start connect ${count} ${macId}`);
+      self.pushInfoToReact(`Start connect ${count} ${macId}`);
 
       let connectDevice = ()=>{
         count++;
@@ -184,7 +184,11 @@ class SLDTest extends EventEmitter {
             self.pushInfoToReact(`Connect failure ${count} ${macId}, ErrorId: ${device.errorid}`);
 
             if(count < TIMEOUT_COUNT) {
-              connectDevice();
+
+              Meteor.setTimeout(()=>{
+                connectDevice();
+              }, 2000)
+
               return;
             }
 
@@ -246,7 +250,7 @@ class SLDTest extends EventEmitter {
 		return new Promise((resolve, reject) => {
 
 			console.log('Disconnect start');
-
+      self.pushInfoToReact(`Disconnect start ${macId}`);
       self.data['disconnectStartTime'] = +new Date();
 
 			self.getConnectDevicePromise(macId).then((res)=>{
@@ -269,6 +273,7 @@ class SLDTest extends EventEmitter {
 						DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId});
 
 						console.log('Disconnect success!')
+            self.pushInfoToReact(`Disconnect success! ${macId}`);
 
 						resolve('Disconnect success!');
 
@@ -316,6 +321,10 @@ class SLDTest extends EventEmitter {
 
     return new Promise((resolve, reject) =>{
       self.data['measureStartTime'] = +new Date();
+
+      self.pushInfoToReact('Start measure ');
+      console.log('Start measure ')
+
       BpManagerCordova.startMeasure(function (res) {
   			var json = BP3L.parseJSON(res);
 
@@ -343,6 +352,7 @@ class SLDTest extends EventEmitter {
 
   			reject(err);
         console.log('Cordvoa Error: ', err)
+        self.pushInfoToReact('加压失败 ');
 
   		}, BP3L.appsecret, macId)
 
