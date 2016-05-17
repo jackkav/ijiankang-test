@@ -328,9 +328,9 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 	_run() {
 		let self = this
 		self.data = {
-			testID:self.testID,
-			deviceID:self.deviceID,
-			sessionID:"sessionId_"+ (+new Date()),
+			testId:self.testID,
+			macId:self.deviceID,
+			sessionId:"sessionId_"+ (+new Date()),
 
 			type: "DiscoveAndConnectAndMeasureTest",
 			//runStartTime: +new Date(),
