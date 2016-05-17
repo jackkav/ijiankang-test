@@ -16,7 +16,7 @@
 
  一个test 10个session  一个session 20次直连
 
- DiscoveAndConnectAndMeasureTest
+ DiscoverAndConnectAndMeasureTest
  * */
 
 
@@ -26,7 +26,7 @@ let DEVICE_ID = ''
 let DISCOVERY_TIME = 2
 
 
-class DiscoveAndConnectAndMeasureTest extends EventEmitter {
+class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 	constructor(props) {
 		super(props)
@@ -162,7 +162,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 		self._runtimes++
 		self.data.runOrder = self._runtimes
-		DB.DiscoveAndConnectAndMeasureTest.insert(self.data)
+		DB.DiscoverAndConnectAndMeasureTest.insert(self.data)
 	}
 
 	//尝试两次
@@ -344,7 +344,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 			macId:self.deviceID,
 			sessionId:"sessionId_"+ (+new Date()),
 
-			type: "DiscoveAndConnectAndMeasureTest",
+			type: "DiscoverAndConnectAndMeasureTest",
 			//runStartTime: +new Date(),
 			deviceInfo: {...window.device},
 			connectData:{},    //连接信息
@@ -356,7 +356,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 
 
 
-		self.log('[[[==='+self._runtimes+'===]]] Run DiscoveAndConnectAndMeasureTest')
+		self.log('[[[==='+self._runtimes+'===]]] Run DiscoverAndConnectAndMeasureTest')
 
 		self.reactiveData.set(
 			_.extend(self.reactiveData.get(),{runOrder:self._runtimes})
@@ -435,7 +435,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		self._runAllCount=0
 		self._runSuccessCount=0
 
-		this.log('DiscoveAndConnectAndMeasureTest start '+ testID,deviceID)
+		this.log('DiscoverAndConnectAndMeasureTest start '+ testID,deviceID)
 
 
 		self.testID = testID
@@ -455,7 +455,7 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 		var self = this
 
 
-		this.log('try stop DiscoveAndConnectAndMeasureTest')
+		this.log('try stop DiscoverAndConnectAndMeasureTest')
 
 
 		clearTimeout(self.nextStartTimer)
@@ -499,5 +499,5 @@ class DiscoveAndConnectAndMeasureTest extends EventEmitter {
 }
 
 
-this.DiscoveAndConnectAndMeasureTest = DiscoveAndConnectAndMeasureTest
+this.DiscoverAndConnectAndMeasureTest = DiscoverAndConnectAndMeasureTest
 

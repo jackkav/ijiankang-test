@@ -136,8 +136,8 @@ App.AdminIndex = React.createClass({
 
 
 			直连测试
-			<a href="/DiscoveAndConnectAndMeasurePage" >
-				<RB.Button bsStyle="primary" block>DiscoveAndConnectAndMeasure</RB.Button>
+			<a href="/DiscoverAndConnectAndMeasurePage" >
+				<RB.Button bsStyle="primary" block>DiscoverAndConnectAndMeasurePage</RB.Button>
 
 			</a>
 

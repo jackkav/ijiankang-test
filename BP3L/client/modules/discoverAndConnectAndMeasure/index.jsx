@@ -2,13 +2,13 @@
  * Created on 5/16/16.
  */
 
-BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
+BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 	mixins: [ReactMeteorData],
 
 	getMeteorData(){
 
 		if(!this.t1){
-			this.t1 = new DiscoveAndConnectAndMeasureTest()
+			this.t1 = new DiscoverAndConnectAndMeasureTest()
 		}
 
 
@@ -97,7 +97,7 @@ BP3L.DiscoveAndConnectAndMeasurePage = React.createClass({
 	render() {
 		return <div style={{padding:20}}>
 
-			<title>DiscoveAndConnectAndMeasureTest</title>
+			<title>DiscoverAndConnectAndMeasureTest</title>
 
 
 			<RB.Button bsStyle="primary" block onClick={this.goHome}>

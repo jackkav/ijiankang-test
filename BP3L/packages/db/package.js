@@ -32,7 +32,7 @@ Package.onUse(function(api) {
   //直连
   api.addFiles('schema/ConnectDirectly.js', ["server", "client"]);
 
-  api.addFiles('schema/DiscoveAndConnectAndMeasureTest.js', ["server", "client"]);
+  api.addFiles('schema/DiscoverAndConnectAndMeasureTest.js', ["server", "client"]);
 
 
 

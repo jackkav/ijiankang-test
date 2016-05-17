@@ -29,8 +29,8 @@ FlowRouter.route('/apitest', {
 });
 
 
-FlowRouter.route('/DiscoveAndConnectAndMeasurePage', {
+FlowRouter.route('/DiscoverAndConnectAndMeasurePage', {
 	action: function(params, queryParams) {
-		ReactLayout.render(BP3L.DiscoveAndConnectAndMeasurePage)
+		ReactLayout.render(BP3L.DiscoverAndConnectAndMeasurePage)
 	}
 });
