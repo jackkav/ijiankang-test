@@ -63,6 +63,7 @@ BP3L.APItest = React.createClass({
       <div style={{margin: '20px'}}>
         <div>选择一个TestId</div>
         <select style={{padding: '5px', fontSize: '12px'}} onChange={this.handleChange} value={this.state.testId}>
+          <option value=''></option>;
           {this.data.idInfos.map((item, key)=>{
             let manufacturerVersion = item.deviceInfo ? `${item.deviceInfo.manufacturer} ${item.deviceInfo.version}` : '';
             return <option key={key} value={item.testId}>{manufacturerVersion} {item.testId.substr(-4)} run了{item.sessionIds && item.sessionIds.length}次</option>;
@@ -77,6 +78,7 @@ BP3L.APItest = React.createClass({
       <div style={{margin: '20px'}}>
         <div>选择一个MacId</div>
         <select style={{padding: '5px', fontSize: '12px'}} onChange={this.handleChangeMacId} value={this.state.macId}>
+          <option value=''></option>;
           {MACID_LIST.map((item, key)=>{
             return <option key={key} value={item}>{item}</option>;
           })}
