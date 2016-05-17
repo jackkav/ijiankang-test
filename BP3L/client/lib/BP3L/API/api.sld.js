@@ -95,7 +95,7 @@ class SLDTest extends EventEmitter {
             // let macId = device.address;
             // let count = this.count;
 
-            self.count = 0;
+            count = 0;
             // DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, count, sessionId, testId});
 
             resolve(device.address);
@@ -110,7 +110,7 @@ class SLDTest extends EventEmitter {
             self.pushInfoToReact(`Discovery timeout ${count} 次, ErrorId: ${device.errorid}`)
             console.log(`Discovery timeout ${count} 次, ErrorId: ${device.errorid}`);
 
-            if(this.count < TIMEOUT_COUNT) {
+            if(count < TIMEOUT_COUNT) {
               startDiscovery();
               return;
             }
