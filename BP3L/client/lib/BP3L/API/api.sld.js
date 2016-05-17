@@ -58,21 +58,28 @@ class SLDTest extends EventEmitter {
     let deviceInfo = h.getDeviceInfo();
     let apiType = 'discovery';
 
+    let count = 0;
+
     return new Promise((resolve, reject)=>{
 
       let startDiscovery = ()=>{
-        self.count++;
-        self.data[`startDiscoveryTime${self.count}`] = +new Date()
+
+        count++;
+        self.data[`discoveryStartTime_${count}`] = +new Date()
+
         BpManagerCordova.startDiscovery((res)=>{
 
           let device = BP3L.parseJSON(res);
           console.log('Searching', res);
           self.pushInfoToReact(`Searching${res}`)
 
-          if( !deviceId && res.msg !== 'Error' || device.address && MACID_LIST.indexOf(device.address) !== -1){
+          let flagRandom = device && device.address && (MACID_LIST.indexOf(device.address) !== -1) && !deviceId;
+          let flagSpecial = device && device.address && device.address === deviceId;
 
-            self.data[`discoverySuccessTime${self.count}`] = +new Date();
-            self.data['discoverySuccessCount'] = this.count;
+          if( flagRandom || flagSpecial ){
+
+            self.data[`discoverSuccessTime_${count}`] = +new Date();
+            // self.data['discoverySuccessCount'] = this.count;
 
             this.stopDiscovery();
             this.stopDiscoverySuccess = true;
@@ -82,22 +89,22 @@ class SLDTest extends EventEmitter {
             // let device = BP3L.parseJSON(res);
             // let data = self.data;
             // let macId = device.address;
-            let count = this.count;
+            // let count = this.count;
 
-            this.count = 0;
+            self.count = 0;
             // DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, count, sessionId, testId});
 
             resolve(device.address);
-            self.pushInfoToReact(`Discovery success${device.address}`)
+            self.pushInfoToReact(`Discovery success ${device.address}`)
             console.log('Discovery success', device.address);
 
           }else if(device && device.msg === 'DiscoveryDone' && !this.stopDiscoverySuccess){
 
-            self.data[`discoveryFailureTime${self.count}`] = +new Date();
-            self.data['discoveryFailureCount'] = this.count;
+            self.data[`discoveryFailureTime_${count}`] = +new Date();
+            // self.data['discoveryFailureCount'] = this.count;
 
-            self.pushInfoToReact(`Discovery timeout ${count} ${deviceId}`)
-            console.log(`Discovery timeout ${count} ${deviceId}`);
+            self.pushInfoToReact(`Discovery timeout ${count} 次, ErrorId: ${device.errorid}`)
+            console.log(`Discovery timeout ${count} 次, ErrorId: ${device.errorid}`);
 
             if(this.count < TIMEOUT_COUNT) {
               startDiscovery();
@@ -105,14 +112,16 @@ class SLDTest extends EventEmitter {
             }
 
             let status = 'failure';
-            let data = self.data;
-            let count = this.count;
+            let timeData = self.data;
+            let errorId = device.errorid;
 
-            let content = {deviceInfo, apiType, status, data, sessionId, testId}
+            let content = {deviceInfo, apiType, status, timeData, sessionId, testId, errorId}
 
             DB.SLDtest.insert(content);
-            this.count = 0;
-            reject(`Discovery timeout ${deviceId}`)
+
+            count = 0;
+
+            reject(`Discovery timeout`)
 
           }
 
@@ -131,6 +140,7 @@ class SLDTest extends EventEmitter {
   connectPromise(macId, sessionId, testId) {
 
 		let self = this;
+    let count = 0;
 		return new Promise((resolve, reject)=>{
 
       let deviceInfo = h.getDeviceInfo();
@@ -140,23 +150,22 @@ class SLDTest extends EventEmitter {
       self.pushInfoToReact(`Start connect ${macId}`);
 
       let connectDevice = ()=>{
-        this.count++;
-        self.data[`startConnectTime${self.count}`] = +new Date()
+        count++;
+        self.data[`connectStartTime_${count}`] = +new Date()
         BpManagerCordova.connectDevice((res)=>{
 
           let device = BP3L.parseJSON(res);
 
           if(device && device.msg === 'Connected') {
 
-            self.data[`connectSuccessTime${self.count}`] = +new Date()
-            self.data['connectSuccessCount'] = this.count
+            self.data[`connectSuccessTime_${count}`] = +new Date()
+
             // let status = 'success';
   					// let data = self.data;
-            let count = this.count;
             console.log(`Connect success ${count} ${macId}`);
             self.pushInfoToReact(`Connect success ${count} ${macId}`);
-            
-            this.count = 0;
+
+            count = 0;
 
             // DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, count, sessionId, testId});
 
@@ -165,26 +174,23 @@ class SLDTest extends EventEmitter {
 
           }else if(device && device.msg === 'ConnectionFail') {
 
-
-            let count = this.count;
-
-            self.data[`connectFailureTime${self.count}`] = +new Date();
-            self.data['connectFailureCount'] = this.count;
+            self.data[`connectFailureTime_${count}`] = +new Date();
 
             console.log(`Connect failure ${count} ${macId}`);
-            self.pushInfoToReact(`Connect failure ${count} ${macId}`);
+            self.pushInfoToReact(`Connect failure ${count} ${macId}, ErrorId: ${device.errorid}`);
 
-            if(this.count < TIMEOUT_COUNT) {
+            if(count < TIMEOUT_COUNT) {
               connectDevice();
               return;
             }
 
   					let status = 'failure';
-  					let data = self.data;
+  					let timeData = self.data;
+            let errorId = device.errorid
 
-            this.count = 0;
+            count = 0;
 
-  	        DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, testId, sessionId});
+  	        DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, testId, sessionId, errorId});
 
   					reject(`Connect failure ${macId}`)
   				}
@@ -237,7 +243,7 @@ class SLDTest extends EventEmitter {
 
 			console.log('Disconnect start');
 
-      self.data['startDisConnectTime'] = +new Date();
+      self.data['disconnectStartTime'] = +new Date();
 
 			self.getConnectDevicePromise(macId).then((res)=>{
 
@@ -251,11 +257,12 @@ class SLDTest extends EventEmitter {
 
 					if(device && device.address === macId) {
 
-            self.data['disConnectSuccessTime'] = +new Date();
+            self.data['disconnectSuccessTime'] = +new Date();
 
 						let status = 'success';
-
+            let timeData =self.data;
 						// DB.SLDtest.insert({deviceInfo, apiType, status});
+						DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId});
 
 						console.log('Disconnect success!')
 
@@ -263,14 +270,17 @@ class SLDTest extends EventEmitter {
 
 					}else {
 
-            self.data['disConnectFailureTime'] = +new Date();
+            self.data['disconenctFailureTime'] = +new Date();
 						let status = 'failure';
 
-            let data = self.data;
+            let timeData = self.data;
+            let errorId = device.errorid;
 
-						DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, sessionId, testId});
+						DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId, errorId});
 
 						console.log('Disconnect failure!')
+
+            self.pushInfoToReact(`Disconnect failure! ErrorId: ${errorId}`);
 
 						reject('Fail to Disconnect');
 					}
@@ -301,7 +311,7 @@ class SLDTest extends EventEmitter {
     let apiType = 'measureDone';
 
     return new Promise((resolve, reject) =>{
-      self.data['startMeasureTime'] = +new Date();
+      self.data['measureStartTime'] = +new Date();
       BpManagerCordova.startMeasure(function (res) {
   			var json = BP3L.parseJSON(res);
 
@@ -315,13 +325,12 @@ class SLDTest extends EventEmitter {
   			} else if (json && json.msg == 'Error') {
 
           console.log('袖带太松 ');
-          self.data['measureTimeForLoose'] = +new Date();
+          self.data['measureDoneTime'] = +new Date();
   				self.pushInfoToReact('袖带太松 ');
 
           let status = 'success';
-          let data = self.data;
 
-          DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, sessionId, testId});
+          // DB.SLDtest.insert({deviceInfo, apiType, status, data, macId, sessionId, testId});
 
           resolve();
   			}

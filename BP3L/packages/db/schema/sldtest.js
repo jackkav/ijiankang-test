@@ -17,7 +17,7 @@ Schema.SLDtest = new SimpleSchema([Schema.Base, {
     label: '成功(success) 失败(failure)'
   },
 
-  data:{
+  timeData:{
     type: Object,
     blackbox: true, //todo
     optional: true
@@ -37,6 +37,11 @@ Schema.SLDtest = new SimpleSchema([Schema.Base, {
   sessionId: {
     type: String,
     label: 'bp3lsn123456789'
+  },
+
+  errorId: {
+    type: String,
+    optional: true
   }
 
 }])

@@ -3,10 +3,19 @@
 let count = 0;
 
 let sldCount = 0;
+let sldSuccessCount = 0;
 let sessionId;
 let testId;
 
 let DEVICE_ID;
+
+let MACID_LIST= [
+  '7CEC79E05EFA',
+  'D05FB8418966',
+  '7CEC794184DB',
+  '7CEC793A0306',
+  '7CEC7939E9B9'
+]
 
 BP3L.APItest = React.createClass({
 
@@ -15,13 +24,20 @@ BP3L.APItest = React.createClass({
 
   getInitialState() {
     return {
-      testId: ''
+      testId: '',
+      macId: ''
     }
   },
 
   handleChange(e) {
     this.setState({
       testId: e.target.value
+    })
+  },
+
+  handleChangeMacId(e) {
+    this.setState({
+      macId: e.target.value
     })
   },
 
@@ -41,9 +57,23 @@ BP3L.APItest = React.createClass({
   renderSelect() {
     return (
       <div style={{margin: '20px'}}>
+        <div>选择一个TestId</div>
         <select style={{padding: '5px'}} onChange={this.handleChange} value={this.state.testId}>
           {this.data.idInfos.map((item, key)=>{
             return <option key={key} value={item.testId}>{item.testId} 已经run了{item.sessionIds && item.sessionIds.length}次</option>;
+          })}
+        </select>
+      </div>
+    );
+  },
+
+  renderMacId() {
+    return (
+      <div style={{margin: '20px'}}>
+        <div>选择一个MacId</div>
+        <select style={{padding: '5px'}} onChange={this.handleChangeMacId} value={this.state.macId}>
+          {MACID_LIST.map((item, key)=>{
+            return <option key={key} value={item}>{item}</option>;
           })}
         </select>
       </div>
@@ -143,7 +173,12 @@ BP3L.APItest = React.createClass({
   },
 
 
-  runSLD20() {
+  runSLD20(notClickFlag) {
+
+    if(!notClickFlag) {
+      sldCount = 0;
+      sldSuccessCount = 0;
+    }
 
     if(sldCount === 0) {
 
@@ -160,7 +195,7 @@ BP3L.APItest = React.createClass({
     }
 
     if(sldCount >= 20) {
-      sldCount = 0;
+
       this.SLDTest.pushInfoToReact('@@@@@@@@ 完成20次测试 @@@@@@@@');
       return;
     }
@@ -170,16 +205,17 @@ BP3L.APItest = React.createClass({
     let reRun = ()=>{
 
     Meteor.setTimeout(()=>{
-        self.runSLD20();
+        self.data = {};
+        self.runSLD20(true);
       }, 2000)
 
     }
 
-    DEVICE_ID = 'D05FB8418966';
+    // DEVICE_ID = 'D05FB8418966';
 
     let actualMacId;
 
-    this.SLDTest.discoveryPromise(DEVICE_ID, sessionId, testId).then((macId)=>{
+    this.SLDTest.discoveryPromise(this.state.macId, sessionId, testId).then((macId)=>{
 
       actualMacId = macId
       return this.SLDTest.connectPromise(macId, sessionId, testId)
@@ -192,6 +228,7 @@ BP3L.APItest = React.createClass({
       let disconnect = () =>{
         self.SLDTest.disconnectPromise(actualMacId, sessionId, testId).then((successMsg)=>{
           sldCount++;
+          sldSuccessCount++;
           console.log(`第${sldCount}运行次成功`);
           this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
           reRun();
@@ -257,9 +294,16 @@ BP3L.APItest = React.createClass({
       	测试搜连断20次
       </RB.Button>
 
+
       {this.renderSelect()}
 
+      {this.renderMacId()}
 
+      <div style={{marginLeft: '20px'}}>
+        成功运行{sldSuccessCount}次
+        <br/><br/>
+        失败运行{sldCount-sldSuccessCount}次
+      </div>
       {this.renderLogs()}
 
       {
