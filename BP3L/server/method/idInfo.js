@@ -26,6 +26,18 @@ Meteor.methods({
     })
 
   },
+  'idInfo.remove': (testId, sessionId) =>{
+
+    DB.IDInfo.update({
+      testId: testId
+    }, {
+      $pull: {
+        sessionIds: sessionId
+      }
+    })
+
+  },
+
 
   'idInfo.createTestId': (testId, testType, deviceInfo) =>{
     DB.IDInfo.insert({testId, testType, deviceInfo})

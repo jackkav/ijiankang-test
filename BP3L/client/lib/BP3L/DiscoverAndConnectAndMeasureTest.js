@@ -412,6 +412,11 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 						self.discoveryTime++
 
 					}else{
+
+						//取消次数
+						Meteor.call('idInfo.remove', self.testId, self.sessionId);
+
+
 						alert('Discovery Device failue '+ deviceID)
 
 					}
