@@ -11,8 +11,8 @@ Meteor.methods({
 
   },
 
-  'idInfo.insert': (testId, sessionIds) =>{
-    DB.IDInfo.insert({testId, sessionIds})
+  'idInfo.insert': (testId, sessionIds, deviceInfo) =>{
+    DB.IDInfo.insert({testId, sessionIds, deviceInfo})
   },
 
   'idInfo.update': (testId, sessionId) =>{

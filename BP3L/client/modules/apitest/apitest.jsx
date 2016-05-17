@@ -14,7 +14,11 @@ let MACID_LIST= [
   'D05FB8418966',
   '7CEC794184DB',
   '7CEC793A0306',
-  '7CEC7939E9B9'
+  '7CEC7939E9B9',
+  'A4D578405B5A',
+  'A4D578416D45',
+  'A4D5783F5A67',
+  'A4D578408246'
 ]
 
 BP3L.APItest = React.createClass({
@@ -58,9 +62,10 @@ BP3L.APItest = React.createClass({
     return (
       <div style={{margin: '20px'}}>
         <div>选择一个TestId</div>
-        <select style={{padding: '5px'}} onChange={this.handleChange} value={this.state.testId}>
+        <select style={{padding: '5px', fontSize: '12px'}} onChange={this.handleChange} value={this.state.testId}>
           {this.data.idInfos.map((item, key)=>{
-            return <option key={key} value={item.testId}>{item.testId} 已经run了{item.sessionIds && item.sessionIds.length}次</option>;
+            let manufacturerVersion = item.deviceInfo ? `${item.deviceInfo.manufacturer} ${item.deviceInfo.version}` : '';
+            return <option key={key} value={item.testId}>{manufacturerVersion} {item.testId.substr(-4)} run了{item.sessionIds && item.sessionIds.length}次</option>;
           })}
         </select>
       </div>
@@ -71,7 +76,7 @@ BP3L.APItest = React.createClass({
     return (
       <div style={{margin: '20px'}}>
         <div>选择一个MacId</div>
-        <select style={{padding: '5px'}} onChange={this.handleChangeMacId} value={this.state.macId}>
+        <select style={{padding: '5px', fontSize: '12px'}} onChange={this.handleChangeMacId} value={this.state.macId}>
           {MACID_LIST.map((item, key)=>{
             return <option key={key} value={item}>{item}</option>;
           })}
@@ -104,7 +109,7 @@ BP3L.APItest = React.createClass({
 
     this.APIConnect = new APIConnect();
 
-    Meteor.call('idInfo.initIDInfo');
+    // Meteor.call('idInfo.initIDInfo');
 
     // Searching for home
     // Meteor.call('bp3l.getAvailableDevice', (err, macId)=>{
@@ -190,7 +195,8 @@ BP3L.APItest = React.createClass({
         Meteor.call('idInfo.update', this.state.testId, sessionId);
       }else {
         testId = `bp3ltt${new Date().getTime()}`;
-        Meteor.call('idInfo.insert', testId, [sessionId]);
+        let deviceInfo = h.getDeviceInfo();
+        Meteor.call('idInfo.insert', testId, [sessionId], deviceInfo);
       }
 
     }
@@ -309,6 +315,8 @@ BP3L.APItest = React.createClass({
 
 
       {this.renderSelect()}
+
+      <div>当前的testId {testId}</div>
 
       {this.renderMacId()}
 
