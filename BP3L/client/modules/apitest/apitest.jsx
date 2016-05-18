@@ -52,13 +52,15 @@ BP3L.APItest = React.createClass({
   },
 
   getMeteorData() {
-
-    const idInfoSub = Meteor.subscribe('bp3l.IDInfo');
+    let deviceInfo = h.getDeviceInfo();
+    const idInfoSub = Meteor.subscribe('bp3l.IDInfoByuuid', deviceInfo.uuid);
+    const bp3lInfoSub = Meteor.subscribe('bp3l.macIds');
     if(!this.SLDTest) {
       this.SLDTest = new SLDTest();
     }
     return {
-      idInfos: idInfoSub.ready() ? DB.IDInfo.find({}).fetch() : [],
+      idInfos: idInfoSub.ready() ? DB.IDInfo.find({'deviceInfo.uuid': deviceInfo.uuid}).fetch() : [],
+      macIds: bp3lInfoSub.ready() ? DB.BP3LInfo.find({}).fetch() : [],
       aReactiveInfo: this.SLDTest.aReactiveInfo.get()
     }
   },
@@ -85,8 +87,8 @@ BP3L.APItest = React.createClass({
         <div>选择一个MacId</div>
         <select style={{padding: '5px', fontSize: '12px'}} onChange={this.handleChangeMacId} value={this.state.macId}>
           <option value=''></option>;
-          {MACID_LIST.map((item, key)=>{
-            return <option key={key} value={item}>{item}</option>;
+          {this.data.macIds.map((item, key)=>{
+            return <option key={key} value={item.macId}>{item.macId}</option>;
           })}
         </select>
       </div>
@@ -128,7 +130,7 @@ BP3L.APItest = React.createClass({
 
   componentWillUnMount() {
 
-    Meteor.call('bp3l.updateAvailableDeviceStatus', DEVICE_ID);
+    // Meteor.call('bp3l.updateAvailableDeviceStatus', DEVICE_ID);
 
     count = 0;
     sldCount = 0;
@@ -226,11 +228,15 @@ BP3L.APItest = React.createClass({
 
     }
 
+    let macIds = this.data.macIds.map((obj)=>{
+      return obj && obj.macId;
+    })
+
     // DEVICE_ID = 'D05FB8418966';
 
     let actualMacId;
 
-    this.SLDTest.discoveryPromise(this.state.macId, sessionId, testId).then((macId)=>{
+    this.SLDTest.discoveryPromise(this.state.macId, sessionId, testId, macIds).then((macId)=>{
 
       actualMacId = macId
       return this.SLDTest.connectPromise(macId, sessionId, testId)

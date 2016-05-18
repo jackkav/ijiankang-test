@@ -63,7 +63,7 @@ class SLDTest extends EventEmitter {
     }, BP3L.appsecret)
   }
 
-  discoveryPromise(deviceId, sessionId,testId) {
+  discoveryPromise(deviceId, sessionId,testId, macIds) {
     let self = this;
     let deviceInfo = h.getDeviceInfo();
     let apiType = 'discovery';
@@ -83,7 +83,7 @@ class SLDTest extends EventEmitter {
           console.log('Searching', res, BP3L.appsecret);
           self.pushInfoToReact(`Searching${res} BP3L.appsecret ${BP3L.appsecret}`)
 
-          let flagRandom = device && device.address && (MACID_LIST.indexOf(device.address) !== -1) && !deviceId;
+          let flagRandom = device && device.address && (macIds.indexOf(device.address) !== -1) && !deviceId;
           let flagSpecial = device && device.address && device.address === deviceId;
 
           if( flagRandom || flagSpecial ){
@@ -184,11 +184,11 @@ class SLDTest extends EventEmitter {
 
   					resolve(macId);
 
-          }else if(device && device.msg === 'ConnectionFail') {
+          }else if(device && device.msg === 'Error') {
 
             self.data[`connectFailureTime_${count}`] = +new Date();
 
-            console.log(`Connect failure ${count} ${macId}`);
+            console.log(`Connect failure ${count} ${macId}, ErrorId: ${device.errorid}`);
             self.pushInfoToReact(`Connect failure ${count} ${macId}, ErrorId: ${device.errorid}`);
 
             if(count < TIMEOUT_COUNT) {

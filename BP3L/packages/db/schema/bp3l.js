@@ -10,7 +10,7 @@ Schema.BP3LInfo = new SimpleSchema([Schema.Base, {
 
   status: {
     type: Boolean,
-    defaultValue: false,
+    optional: true,
     label: '连接中(true) 未连接(false)'
   }
 
