@@ -56,7 +56,6 @@ class SLDTest extends EventEmitter {
 
   stopDiscovery() {
     BpManagerCordova.stopDiscovery((res)=>{
-      this.stopDiscoverySuccess = false;
       console.log('stop discovery!');
     },(err)=>{
       console.log('Cordvoa Error: ', err);
@@ -81,7 +80,7 @@ class SLDTest extends EventEmitter {
 
           let device = BP3L.parseJSON(res);
           console.log('Searching', res, BP3L.appsecret);
-          self.pushInfoToReact(`Searching${res} BP3L.appsecret ${BP3L.appsecret}`)
+          self.pushInfoToReact(`Searching${res}`)
 
           let flagRandom = device && device.address && (macIds.indexOf(device.address) !== -1) && !deviceId;
           let flagSpecial = device && device.address && device.address === deviceId;
@@ -148,7 +147,7 @@ class SLDTest extends EventEmitter {
   }
 
   connectPromise(macId, sessionId, testId) {
-
+    this.stopDiscoverySuccess = false;
 		let self = this;
     let count = 0;
 		return new Promise((resolve, reject)=>{
