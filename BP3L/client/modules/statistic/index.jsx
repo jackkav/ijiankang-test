@@ -54,6 +54,7 @@ BP3L.StasticIndex = React.createClass({
 								-{item.deviceInfo.platform}
 								-{item.deviceInfo.model}
 								-{item.deviceInfo.version}
+								-{item.deviceInfo.uuid}
 
 							</td>
 						</tr>

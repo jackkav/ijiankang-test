@@ -10,9 +10,9 @@ Meteor.publish("bp3l.IDInfo",function(){
 
 Meteor.publish("bp3l.IDInfoByuuid",function(uuid){
 
-  if(!uuid) {
-    return;
-  }
+  //if(!uuid) {
+  //  return;
+  //}
 
   return DB.IDInfo.find({'deviceInfo.uuid': uuid});
 

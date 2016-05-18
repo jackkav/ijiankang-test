@@ -11,10 +11,18 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 			this.t1 = new DiscoverAndConnectAndMeasureTest()
 		}
 
-		const idInfoSub = Meteor.subscribe('bp3l.IDInfo');
+		let deviceInfo = h.getDeviceInfo()
+		this.idInfoSub = Meteor.subscribe('bp3l.IDInfoByuuid', deviceInfo.uuid );//'daea58be8404acf5'
+
+		this.bp3lInfoSub = Meteor.subscribe('bp3l.macIds');
 
 		return {
-			idInfos: idInfoSub.ready() ? DB.IDInfo.find({testType:'DiscoverAndConnectAndMeasureTest'}).fetch() : [],  //test id
+			idInfos: this.idInfoSub.ready() ? DB.IDInfo.find({
+				testType:'DiscoverAndConnectAndMeasureTest'
+			}).fetch() : [],  //test id
+
+			macIds: this.bp3lInfoSub.ready() ? DB.BP3LInfo.find({}).fetch() : [],
+
 			info:this.t1.reactiveInfo.get(),
 			reactiveData:this.t1.reactiveData.get()
 		}
@@ -57,12 +65,21 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 	},
 
 	newTestId(){
+		let self =this
 
 		let deviceInfo = h.getDeviceInfo();
-		Meteor.call('idInfo.createTestId',
-			'connectDirectly'+(+new Date()),
-			'DiscoverAndConnectAndMeasureTest',
-			deviceInfo);
+		Meteor.call('idInfo.createTestId', 'direct_'+(+new Date()), 'DiscoverAndConnectAndMeasureTest',
+			deviceInfo,function(error, result){
+
+				debugger
+				if(!error){
+					self.setState({
+						testId:result.testId
+					})
+				}
+
+
+			});
 
 	},
 
@@ -116,6 +133,12 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 	},
 
 	render() {
+
+		if(!(this.idInfoSub.ready() && this.bp3lInfoSub.ready())){
+			return <div>loading</div>
+		}
+
+
 		return <div style={{padding:20}}>
 
 			<title>DiscoverAndConnectAndMeasureTest</title>
@@ -136,7 +159,7 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 						{this.data.idInfos.map((item, key)=>{
 							let manufacturerVersion = item.deviceInfo ? `${item.deviceInfo.manufacturer} ${item.deviceInfo.version}` : '';
 
-							return <option key={key} value={item.testId}>
+							return <option key={key} value={item.testId} >
 								 {manufacturerVersion} {item.testId.substr(-4)} run了{item.sessionIds && item.sessionIds.length}次
 							</option>;
 						})}
@@ -161,8 +184,9 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 					<option value=""></option>
 
 					{
-						App.devices.map(function(item){
-							return <option value={item}>{item}-{item.slice(-4)}</option>
+						this.data.macIds.map(function(item){
+							let mac = item.macId
+							return <option value={mac}>{mac}-{mac.slice(-4)}</option>
 
 						})
 					}

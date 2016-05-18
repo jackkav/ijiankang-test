@@ -40,7 +40,9 @@ Meteor.methods({
 
 
   'idInfo.createTestId': (testId, testType, deviceInfo) =>{
-    DB.IDInfo.insert({testId, testType, deviceInfo})
+    var _id = DB.IDInfo.insert({testId, testType, deviceInfo})
+
+    return {testId, testType}
   },
 
 
