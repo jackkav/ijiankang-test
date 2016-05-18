@@ -56,6 +56,7 @@ class SLDTest extends EventEmitter {
 
   stopDiscovery() {
     BpManagerCordova.stopDiscovery((res)=>{
+      this.stopDiscoverySuccess = true;
       console.log('stop discovery!');
     },(err)=>{
       console.log('Cordvoa Error: ', err);
@@ -63,6 +64,7 @@ class SLDTest extends EventEmitter {
   }
 
   discoveryPromise(deviceId, sessionId,testId, macIds) {
+    this.stopDiscoverySuccess = false;
     let self = this;
     let deviceInfo = h.getDeviceInfo();
     let apiType = 'discovery';
@@ -91,7 +93,7 @@ class SLDTest extends EventEmitter {
             // self.data['discoverySuccessCount'] = this.count;
 
             this.stopDiscovery();
-            this.stopDiscoverySuccess = true;
+            // this.stopDiscoverySuccess = true;
 
 
             // let status = 'success';
@@ -147,7 +149,6 @@ class SLDTest extends EventEmitter {
   }
 
   connectPromise(macId, sessionId, testId) {
-    this.stopDiscoverySuccess = false;
 		let self = this;
     let count = 0;
 		return new Promise((resolve, reject)=>{
