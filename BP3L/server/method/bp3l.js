@@ -3,14 +3,27 @@ Meteor.methods({
 
   'bp3l.initData': ()=>{
 
-    let bp3lData = [
-      {macId: 'D05FB8418966', status: false},
-      {macId: '7CEC793A0306', status: false},
-      {macId: '7CEC79E05EFA', status: false}
-    ];
+    let MACID_LIST= [
+      '7CEC79E05EFA',
+      'D05FB8418966',
+      '7CEC794184DB',
+      '7CEC793A0306',
+      '7CEC7939E9B9',
+      'A4D578405B5A',
+      'A4D578416D45',
+      'A4D5783F5A67',
+      'A4D578408246',
+      "20C38FECC518",
+    	"D05FB8418B71",
+    	"D05FB8418720",
+    	"D05FB8418B06",
+    	"D05FB8418903",
+    	"D05FB841892E"
+    ]
 
-    for(let i=0; i < bp3lData.length; i++) {
-      DB.BP3LInfo.insert(bp3lData[i]);
+    for(let i=0; i < MACID_LIST.length; i++) {
+      let macId = MACID_LIST[i]
+      DB.BP3LInfo.insert({macId});
     }
 
   },
