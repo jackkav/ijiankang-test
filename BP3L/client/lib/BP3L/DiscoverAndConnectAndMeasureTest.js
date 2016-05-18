@@ -35,8 +35,8 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 		this.reactiveInfo = new ReactiveVar()
 
 		this.reactiveData = new ReactiveVar({
-			runOrder:0,
-			runAll:0,
+			//runOrder:0,
+			runSum:0,
 			runSuccess:0,
 			runFailure:0
 
@@ -46,9 +46,17 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 		this.initEvent()
 	}
 
-	updateReactiveData(obj){
+	updateReactiveData(){
+
+
 		let data ={}
-		Object.assign(data,this.reactiveData.get(),obj)
+		Object.assign(data,this.reactiveData.get(),{
+			runSum:this.runSuccess +this.runFailure,
+			runSuccess:this.runSuccess,
+			runFailure:this.runFailure
+
+
+		})
 
 		this.reactiveData.set(data)
 
@@ -71,7 +79,34 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 	}
 
 
+	handleResult(resultType, data){
+		let self = this
 
+		self.data.runResult = {
+			type:data.type
+		}
+
+		if(resultType=='success'){
+			self.runSuccess++
+
+		}else{
+			self.runFailure++
+
+		}
+
+		self.runSum = self.runSuccess + self.runFailure
+
+
+		self.updateReactiveData()
+
+		self.saveData()
+
+		if(self.runSum <20){
+
+			self.tryRestart()
+
+		}
+	}
 
 
 	detectDisconnect(mac) {
@@ -85,7 +120,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 			let disconnectData = {}
 			disconnectData.info = json
 
-			self._runAllCount++
+			//self._runAllCount++
 
 			if(json.msg == 'Disconnect' && json.address== mac){
 
@@ -96,7 +131,9 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 				self.data.runResult={type:"success"}
 
 				//成功次数++
-				self.updateReactiveData({runSuccess: self.reactiveData.get().runSuccess+1})
+				//self.updateReactiveData({runSuccess: self.reactiveData.get().runSuccess+1})
+
+				self.handleResult('success',{type:"success"})
 
 
 			}else{
@@ -105,18 +142,18 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 				self.data.timeData['disconnectFailureTime'] = disconnectData.time=  +new Date()
 				self.data.timeData['runEndTime'] = self.data.timeData['disconnectFailureTime']
 
-				self.data.runResult={type:"disconenctFailure"}
+				self.data.runResult={type:"disconnectFailure"} //disconenctFailure  todo
 
-				self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
-
+				//self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
+				self.handleResult('failure',{type:"disconnectFailure"})
 
 			}
 
 
 
-			self.saveData()
-
-			self.tryRestart()
+			//self.saveData()
+			//
+			//self.tryRestart()
 
 
 		}, (res)=> {
@@ -160,8 +197,8 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 	saveData(){
 		let self = this
 
-		self._runtimes++
-		self.data.runOrder = self._runtimes
+		//self._runtimes++
+		self.data.runOrder = self.runSum
 		DB.DiscoverAndConnectAndMeasureTest.insert(self.data)
 	}
 
@@ -175,13 +212,17 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 		if(num>2){
 
-			self.data.runResult={type:'connectFailure'}
-			self.saveData()
+			//self.data.runResult={type:'connectFailure'}
 
+			self.handleResult('failure',{type:'connectFailure'})
+
+			//self.saveData()
+
+			//self.runFailure++
 			//失败1次
-			self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
+			//self.updateReactiveData({runFailure: self.reactiveData.get().runFailure+1})
 
-			self.tryRestart()
+			//self.tryRestart()
 
 			return
 		}
@@ -357,11 +398,11 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 
-		self.log('[[[==='+self._runtimes+'===]]] Run DiscoverAndConnectAndMeasureTest')
+		self.log('[[[===running '+(self.runSum+1)+'===]]] Run DiscoverAndConnectAndMeasureTest')
 
-		self.reactiveData.set(
-			_.extend(self.reactiveData.get(),{runOrder:self._runtimes})
-		)
+		//self.reactiveData.set(
+		//	_.extend(self.reactiveData.get(),{runOrder:self._runtimes})
+		//)
 
 		self.tryConnect()
 
@@ -437,9 +478,11 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 	start(testID, sessionID, deviceID) {
 		var self = this
 		self.running = true
-		self._runtimes = 1
-		self._runAllCount=0
-		self._runSuccessCount=0
+
+		self.runSum=0
+		self.runSuccess=0
+		self.runFailure=0
+
 
 		this.log('DiscoverAndConnectAndMeasureTest start '+ testID,deviceID)
 
@@ -482,11 +525,11 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 		//限制运行次数
 		//self._runtimes++
-		if(self._runtimes > 20){
-			self.running= false
-
-			return;
-		}
+		//if(self._runtimes > 20){
+		//	self.running= false
+		//
+		//	return;
+		//}
 
 		//开始下一轮
 		if (self.running) {

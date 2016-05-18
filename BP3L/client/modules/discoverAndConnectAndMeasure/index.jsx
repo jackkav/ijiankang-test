@@ -237,9 +237,9 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 
 			<hr/>
 
-			运行:   {this.data.reactiveData.runOrder}
-			已成功: {this.data.reactiveData.runSuccess}
-			已失败: {this.data.reactiveData.runFailure}
+			已运行:   {this.data.reactiveData.runSum}
+			成功: {this.data.reactiveData.runSuccess}
+			失败: {this.data.reactiveData.runFailure}
 			<div>
 				testID:{this.state.testId}<br/>
 				sessionId:{this.state.sessionId}<br/>
