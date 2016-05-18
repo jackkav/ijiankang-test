@@ -10,7 +10,13 @@ let MACID_LIST= [
   'A4D578405B5A',
   'A4D578416D45',
   'A4D5783F5A67',
-  'A4D578408246'
+  'A4D578408246',
+  "20C38FECC518",
+	"D05FB8418B71",
+	"D05FB8418720",
+	"D05FB8418B06",
+	"D05FB8418903",
+	"D05FB841892E"
 ]
 
 var DEFAULT_Value = Immutable.Map({
@@ -159,6 +165,8 @@ class SLDTest extends EventEmitter {
         BpManagerCordova.connectDevice((res)=>{
 
           let device = BP3L.parseJSON(res);
+
+          console.log("connecting: ", res, device)
 
           if(device && device.msg === 'Connected') {
 
