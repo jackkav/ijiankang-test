@@ -51,4 +51,7 @@ BP3L.initAppsecret = function(){
 //初始化验证字符串
 Meteor.startup(function(){
 	BP3L.initAppsecret()
+
+	console.log('Meteor.startup: BP3L.appsecret ',BP3L.appsecret)
+
 })

@@ -375,7 +375,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 	startByDiscoveryOne(deviceID) {
 		let self = this
 
-		self.log('start startByDiscoveryOne '+ deviceID)
+		self.log('start startByDiscoveryOne '+ deviceID+' BP3L.appsecret:'+BP3L.appsecret)
 		BpManagerCordova.startDiscovery((res)=> {
 			let device = BP3L.parseJSON(res)
 

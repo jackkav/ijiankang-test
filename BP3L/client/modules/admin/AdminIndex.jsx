@@ -15,6 +15,10 @@ App.AdminIndex = React.createClass({
 
 		this.ConnectDirectly = new ConnectDirectly()
 
+		BP3L.initAppsecret()
+		console.log('BP3L.appsecret',BP3L.appsecret)
+
+
 
 	},
 	componentWillUnmount(){
@@ -41,10 +45,10 @@ App.AdminIndex = React.createClass({
 	render() {
 
 		const navbarInstance = (
-			<RB.Navbar inverse>
+			<RB.Navbar >
 				<RB.Navbar.Header>
 					<RB.Navbar.Brand>
-						<a href="#">iJianKang Test</a>
+						BP3L TEST
 					</RB.Navbar.Brand>
 					<RB.Navbar.Toggle />
 				</RB.Navbar.Header>
@@ -52,13 +56,19 @@ App.AdminIndex = React.createClass({
 
 				<RB.Navbar.Collapse>
 					<RB.Nav>
-						<RB.NavItem eventKey={1} href="/apitest">apitest</RB.NavItem>
-						<RB.NavItem eventKey={2} href="#">Link</RB.NavItem>
+						{
+							//<RB.NavItem eventKey={1} href="#">Link</RB.NavItem>
+							//<RB.NavItem eventKey={2} href="#">Link</RB.NavItem>
+						}
+
 
 					</RB.Nav>
 					<RB.Nav pullRight>
-						<RB.NavItem eventKey={1} href="#">Link Right</RB.NavItem>
-						<RB.NavItem eventKey={2} href="#">Link Right</RB.NavItem>
+						{
+							//<RB.NavItem eventKey={1} href="#">Link Right</RB.NavItem>
+						}
+
+						<RB.NavItem eventKey={2} href="/statistic">statistic</RB.NavItem>
 					</RB.Nav>
 				</RB.Navbar.Collapse>
 			</RB.Navbar>
@@ -67,7 +77,7 @@ App.AdminIndex = React.createClass({
 		return <div style={{padding:20}}>
 
 			{
-				//navbarInstance
+				navbarInstance
 			}
 
 

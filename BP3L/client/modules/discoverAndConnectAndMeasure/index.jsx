@@ -220,6 +220,7 @@ BP3L.DiscoverAndConnectAndMeasurePage = React.createClass({
 				testID:{this.state.testId}<br/>
 				sessionId:{this.state.sessionId}<br/>
 				deviceID: {this.state.deviceId} <br/>
+				BP3L.appsecret {BP3L.appsecret}<br/>
 
 				{this.data.info}
 

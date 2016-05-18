@@ -48,10 +48,6 @@ BP3L.Discovery = React.createClass({
 			</RB.ButtonToolbar>
 
 
-			<RB.Button bsStyle="primary" onClick={this.apitest}>
-				APItest
-			</RB.Button>
-
 		</div>
 	}
 });
