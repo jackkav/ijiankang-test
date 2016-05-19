@@ -138,6 +138,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 			}else{
 
+
 				//never happen?
 				self.data.timeData['disconnectFailureTime'] = disconnectData.time=  +new Date()
 				self.data.timeData['runEndTime'] = self.data.timeData['disconnectFailureTime']
@@ -172,7 +173,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 		//断开设备 重新开始  仅cordova才有回调
 
-		self.detectDisconnect(DEVICE_ID)
+
 
 		//总时间应超过8s ios
 		setTimeout(function () {
@@ -271,6 +272,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 				//连接成功  开始加压
+				self.detectDisconnect(DEVICE_ID)
 
 				self.tryMeasure()
 
