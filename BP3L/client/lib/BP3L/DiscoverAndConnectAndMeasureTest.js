@@ -304,6 +304,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 
 		}, (res)=> {
+			clearTimeout(self.connectTimer)
 			self.log('cordova connectDevice error '+num + ' ' + res)
 
 			//连接失败的回调
