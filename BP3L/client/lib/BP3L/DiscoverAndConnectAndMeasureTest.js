@@ -434,8 +434,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 					})
 
-					//开启直连
-					self._run()
+
 
 				}
 
@@ -462,6 +461,11 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 
 					}
 
+
+				}else{//发现设备
+
+					//开启直连
+					self._run()
 
 				}
 
