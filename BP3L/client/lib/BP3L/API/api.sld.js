@@ -56,7 +56,6 @@ class SLDTest extends EventEmitter {
 
   stopDiscovery() {
     BpManagerCordova.stopDiscovery((res)=>{
-      this.stopDiscoverySuccess = true;
       console.log('stop discovery!');
     },(err)=>{
       console.log('Cordvoa Error: ', err);
@@ -93,7 +92,7 @@ class SLDTest extends EventEmitter {
             // self.data['discoverySuccessCount'] = this.count;
 
             this.stopDiscovery();
-            // this.stopDiscoverySuccess = true;
+            this.stopDiscoverySuccess = true;
 
 
             // let status = 'success';
