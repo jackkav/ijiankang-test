@@ -243,30 +243,35 @@ BP3L.APItest = React.createClass({
 
     }).then(()=>{
 
-      return this.SLDTest.tryMeasurePromise(actualMacId, sessionId, testId);
+      this.SLDTest.setDisconnectCallback(actualMacId, sessionId, testId).then(()=>{
 
-    }).then(()=>{
-      // let disconnect = () =>{
-      //   self.SLDTest.disconnectPromise(actualMacId, sessionId, testId).then((successMsg)=>{
-      //     sldCount++;
-      //     sldSuccessCount++;
-      //     console.log(`第${sldCount}运行次成功`);
-      //     this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
-      //     reRun();
-      //   }, (err)=>{
-      //     reRun()
-      //   })
-      // }
-      // disconnect();
+        sldCount++;
+        sldSuccessCount++;
+        console.log(`第${sldCount}运行次成功`);
+        this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
 
-      return self.SLDTest.disconnectPromise(actualMacId, sessionId, testId);
-    }).then(()=>{
+        reRun();
 
-      sldCount++;
-      sldSuccessCount++;
-      console.log(`第${sldCount}运行次成功`);
-      this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行成功 @@@@@@@@ `);
-      reRun();
+      }).catch((err)=>{
+
+        sldCount++;
+        console.log(`第${sldCount}次运行失败`);
+        this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行失败 @@@@@@@@ `);
+        reRun();
+
+      })
+
+      this.SLDTest.tryMeasurePromise(actualMacId, sessionId, testId).then(()=>{
+
+        self.SLDTest.disConnectDevice(actualMacId, sessionId, testId);
+
+      }).catch((err)=>{
+
+        sldCount++;
+        console.log(`第${sldCount}次运行失败`);
+        this.SLDTest.pushInfoToReact(`@@@@@@@@ 第${sldCount}次运行失败 @@@@@@@@ `);
+        reRun();
+      })
 
     }).catch((err)=>{
 
