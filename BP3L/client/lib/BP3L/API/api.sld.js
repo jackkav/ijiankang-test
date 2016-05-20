@@ -31,6 +31,7 @@ class SLDTest extends EventEmitter {
 	  this.initEvent()
 		this.data = {}
 		this.stopDiscoverySuccess = false;
+    this.disconnectByManual = false;
     this.count = 0;
 
     this.aReactiveInfo = new ReactiveVar(DEFAULT_Value)
@@ -64,6 +65,7 @@ class SLDTest extends EventEmitter {
 
   discoveryPromise(deviceId, sessionId,testId, macIds) {
     this.stopDiscoverySuccess = false;
+    this.disconnectByManual = false;
     let self = this;
     let deviceInfo = h.getDeviceInfo();
     let apiType = 'discovery';
@@ -224,6 +226,16 @@ class SLDTest extends EventEmitter {
 
 	}
 
+  disConnectDevice(macId, sessionId, testId) {
+    this.disconnectByManual = true;
+    BpManagerCordova.disConnectDevice((res)=>{
+      console.log('Disconnect callback success!', res);
+    }, (error)=>{
+      console.log('Cordvoa Error: ', error);
+    }, BP3L.appsecret, macId);
+
+  }
+
   getConnectDevicePromise(macId) {
 		return new Promise((resolve, reject)=>{
 
@@ -247,7 +259,7 @@ class SLDTest extends EventEmitter {
 		})
 	}
 
-	disconnectPromise(macId, sessionId, testId) {
+	setDisconnectCallback(macId, sessionId, testId) {
 
 		let self = this;
 
@@ -272,17 +284,35 @@ class SLDTest extends EventEmitter {
 
 					if(device && device.address === macId) {
 
-            self.data['disconnectSuccessTime'] = +new Date();
+            if(!self.disconnectByManual) {
 
-						let status = 'success';
-            let timeData =self.data;
-						// DB.SLDtest.insert({deviceInfo, apiType, status});
-						DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId});
+              self.data['disconnectErrorTime'] = +new Date();
+              let timeData = self.data;
+              let status = 'failure';
+              let apiType = 'disconnect-error';
 
-						console.log('Disconnect success!')
-            self.pushInfoToReact(`Disconnect success! ${macId}`);
+              DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId});
 
-						resolve('Disconnect success!');
+              console.log('异常断开，重新开始发现!')
+              self.pushInfoToReact(`异常断开${macId}，重新开始发现!`);
+              reject('异常断开，重新开始发现!');
+
+            }else {
+
+              self.data['disconnectSuccessTime'] = +new Date();
+              let timeData = self.data;
+
+              let status = 'success';
+              // DB.SLDtest.insert({deviceInfo, apiType, status});
+              DB.SLDtest.insert({deviceInfo, apiType, status, timeData, macId, sessionId, testId});
+
+              console.log('Disconnect success!')
+              self.pushInfoToReact(`Disconnect success! ${macId}`);
+              resolve('Disconnect success!');
+
+            }
+
+
 
 					}else {
 
@@ -304,12 +334,6 @@ class SLDTest extends EventEmitter {
 				}, (error)=>{
 					console.error('Cordvoa Error: ', error);
 				}, BP3L.appsecret, macId)
-
-				BpManagerCordova.disConnectDevice((res)=>{
-					console.log('Disconnect callback success!', res);
-				}, (error)=>{
-					console.log('Cordvoa Error: ', error);
-				}, BP3L.appsecret, macId);
 
 			}, (error)=>{
 				console.log(error.errMsg);
@@ -336,11 +360,13 @@ class SLDTest extends EventEmitter {
   			var json = BP3L.parseJSON(res);
 
   			if ((json.msg == 'ZeroDoing' || json.msg == 'ZeroDone')) {
+          self.pushInfoToReact('ZeroDoing ');
 
   			} else if (json && json.msg == 'MeasureDone') {
-
+          self.pushInfoToReact('MeasureDone ');
 
   			} else if (json && json.msg == 'MeasureDoing') {
+          self.pushInfoToReact('MeasureDoing ');
 
   			} else if (json && json.msg == 'Error') {
 
