@@ -490,6 +490,7 @@ class DiscoverAndConnectAndMeasureTest extends EventEmitter {
 		self.runSuccess=0
 		self.runFailure=0
 
+		this.updateReactiveData()
 
 		this.log('DiscoverAndConnectAndMeasureTest start '+ testID,deviceID)
 

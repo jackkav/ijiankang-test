@@ -146,6 +146,77 @@ BP3L.StatisticTestDetail = React.createClass({
 			</RB.Table>
 
 
+
+			<hr/>
+
+			时间统计
+
+			<RB.Table striped bordered condensed hover>
+				<thead>
+				<tr>
+					<th>sessionId</th>
+					<th>testId</th>
+					<th >connect1 time</th>
+					<th >connect1-status</th>
+
+					<th >connect2 time</th>
+					<th >connect2-status</th>
+
+				</tr>
+				</thead>
+
+				<tbody>
+				{
+					this.data.list.map(function(item){
+						debugger
+						return <tr key={item._id}>
+							<td>{item.sessionId}</td>
+							<td>{item._id}</td>
+							<td>
+								{
+									(item.timeData.connectSuccessTime_1
+									|| item.timeData.connectFailureTime_1 || item.timeData.connectFailTime_1
+									|| item.timeData.connectErrorTime_1) - item.timeData.connectStartTime_1
+								}
+
+							</td>
+							<td>{
+								item.timeData.connectSuccessTime_1
+									?'success'
+									:(item.timeData.connectFailureTime_1 ||item.timeData.connectFailTime_1)?'failure':
+										item.timeData.connectErrorTime_1?'error':
+											item.timeData.connectTimeout_1?'timeout':''
+
+							}</td>
+
+							<td>
+								{
+									!item.timeData.connectStartTime_2?'':
+										(
+										(item.timeData.connectSuccessTime_2
+											|| item.timeData.connectFailureTime_2
+											|| item.timeData.connectErrorTime_2) - item.timeData.connectStartTime_2
+										)
+								}
+
+							</td>
+							<td>{
+								item.timeData.connectSuccessTime_2
+									?'success'
+									:item.timeData.connectFailureTime_2?'failure':
+									item.timeData.connectErrorTime_2?'error':
+										item.timeData.connectTimeout_2?'timeout':''
+
+							}</td>
+
+						</tr>
+					})
+				}
+
+				</tbody>
+			</RB.Table>
+
+
 			{
 				//this.data.list.map(function(item){
 				//	return <div key={item._id}> {item._id} </div>
