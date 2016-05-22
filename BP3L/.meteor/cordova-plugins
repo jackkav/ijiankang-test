@@ -1,4 +1,6 @@
 com.ihealth.plugin.base.basemanagercordova@file://../../cordova-plugins/base/
 com.ihealth.plugin.bp.bpmanagercordova@file://../../cordova-plugins/bp/
+com.ihealth.plugin.bp.SpeechSynthesis@file://../../cordova-plugins/SpeechSynthesis/
+
 cordova-plugin-console@1.0.2
 cordova-plugin-device@1.1.2

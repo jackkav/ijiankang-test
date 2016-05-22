@@ -42,6 +42,22 @@ App.AdminIndex = React.createClass({
 		FlowRouter.go('/apitest');
 	},
 
+	say(){
+
+		let  str = "hello 你好"
+
+		var success = function(message){
+			console.log(message);
+		}
+
+		var failure = function(message){
+			console.log(message);
+		}
+
+		SSManagerCordova.startSpeaker(success, failure, str );
+
+	},
+
 	render() {
 
 		const navbarInstance = (
@@ -150,6 +166,16 @@ App.AdminIndex = React.createClass({
 				<RB.Button bsStyle="primary" block>DiscoverAndConnectAndMeasurePage</RB.Button>
 
 			</a>
+
+
+			<br/>
+
+
+			<RB.Button bsStyle="primary"
+			           onClick={this.say}
+			           block
+			>语音测试</RB.Button>
+
 
 		</div>
 	}
