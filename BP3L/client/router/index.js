@@ -28,6 +28,12 @@ FlowRouter.route('/apitest', {
 	}
 });
 
+FlowRouter.route('/analysis', {
+	action: function(params, queryParams) {
+		ReactLayout.render(BP3L.Analysis)
+	}
+});
+
 
 FlowRouter.route('/DiscoverAndConnectAndMeasurePage', {
 	action: function(params, queryParams) {

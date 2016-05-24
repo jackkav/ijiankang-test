@@ -85,6 +85,7 @@ App.AdminIndex = React.createClass({
 						}
 
 						<RB.NavItem eventKey={2} href="/statistic">statistic</RB.NavItem>
+						<RB.NavItem eventKey={3} href="/analysis">analysis</RB.NavItem>
 					</RB.Nav>
 				</RB.Navbar.Collapse>
 			</RB.Navbar>
