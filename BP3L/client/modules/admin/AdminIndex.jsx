@@ -54,6 +54,7 @@ App.AdminIndex = React.createClass({
 			console.log(message);
 		}
 
+		console.log('startSpeaker '+ str)
 		SSManagerCordova.startSpeaker(success, failure, str );
 
 	},

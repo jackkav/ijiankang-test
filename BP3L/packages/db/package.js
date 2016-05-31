@@ -34,6 +34,8 @@ Package.onUse(function(api) {
 
   api.addFiles('schema/DiscoverAndConnectAndMeasureTest.js', ["server", "client"]);
 
+  api.addFiles('schema/temp_analize_1.js', ["server", "client"]);
+
 
 
   api.export([
