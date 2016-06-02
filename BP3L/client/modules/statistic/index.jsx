@@ -44,7 +44,7 @@ BP3L.StasticIndex = React.createClass({
 				{
 					this.data.tests.map(function(item){
 						return <tr key={item._id}>
-							<td><a href={"/statistic/"+item.testId+'?testType='+item.testType}>{item.testId}</a></td>
+							<td><a href={"/statistic/detail/"+item.testId+'?testType='+item.testType}>{item.testId}</a></td>
 							<td>{item.testType}</td>
 							<td><pre>{item.sessionIds && item.sessionIds.join("\n")}</pre></td>
 

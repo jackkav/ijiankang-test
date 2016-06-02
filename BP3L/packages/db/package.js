@@ -22,19 +22,27 @@ Package.onUse(function(api) {
 
   api.addFiles('db.js',["server", "client"]);
 
-  api.addFiles('schema/base.js', ["server", "client"]);
-  api.addFiles('schema/result.js', ["server", "client"]);
-  api.addFiles('schema/apitest.js', ["server", "client"]);
-  api.addFiles('schema/bp3l.js', ["server", "client"]);
-  api.addFiles('schema/IDInfo.js', ["server", "client"]);
-  api.addFiles('schema/sldtest.js', ["server", "client"]);
+  api.addFiles('common/base.js', ["server", "client"]);
+  api.addFiles('common/bp3l.js', ["server", "client"]);
+
+
+
+  api.addFiles('test_v1/result.js', ["server", "client"]);
+  api.addFiles('test_v1/apitest.js', ["server", "client"]);
+  api.addFiles('test_v1/IDInfo.js', ["server", "client"]);
+  api.addFiles('test_v1/sldtest.js', ["server", "client"]);
 
   //直连
-  api.addFiles('schema/ConnectDirectly.js', ["server", "client"]);
+  api.addFiles('test_v1/ConnectDirectly.js', ["server", "client"]);
 
-  api.addFiles('schema/DiscoverAndConnectAndMeasureTest.js', ["server", "client"]);
+  api.addFiles('test_v1/DiscoverAndConnectAndMeasureTest.js', ["server", "client"]);
+  //数据分析
+  api.addFiles('test_v1/temp_analize_1.js', ["server", "client"]);
 
-  api.addFiles('schema/temp_analize_1.js', ["server", "client"]);
+
+  /////Test v2//////
+  api.addFiles('test_v2/TestV2001.js', ["server", "client"]);
+
 
 
 

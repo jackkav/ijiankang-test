@@ -2,7 +2,18 @@
  * Created on 5/11/16.
  */
 
+
+
 FlowRouter.route('/', {
+	action: function(params, queryParams) {
+		console.log("Yeah! We are on the post:", params.postId);
+		ReactLayout.render(App.TestV2Index)
+
+	}
+});
+
+
+FlowRouter.route('/index_v1', {
 	action: function(params, queryParams) {
 		console.log("Yeah! We are on the post:", params.postId);
 		ReactLayout.render(App.AdminIndex)
