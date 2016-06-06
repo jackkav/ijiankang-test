@@ -145,7 +145,7 @@ App.TestV2Index = React.createClass({
 
             <div >
 
-                <div>Select a device ID</div>
+                <div>Select a test type</div>
 
                 <select style={{width:'100%',height:'25px'}}
                 value={this.state.testType} onChange={ this.selectTestType}>
