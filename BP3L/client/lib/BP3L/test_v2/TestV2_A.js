@@ -12,7 +12,7 @@ class TestV2_A extends EventEmitter {
 
         super(options)
 
-        this.init(options ||{})
+        this.init(options || {})
         this.initEvent()
     }
 
@@ -31,7 +31,7 @@ class TestV2_A extends EventEmitter {
         self.RUN_MAX_TIMES = options.RUN_MAX_TIMES || null
 
 
-        self.DISCOVER_AND_CONNECT_TIMES =  options.DISCOVER_AND_CONNECT_TIMES || 10
+        self.DISCOVER_AND_CONNECT_TIMES = options.DISCOVER_AND_CONNECT_TIMES || 10
 
 
         self.runSuccess = 0
@@ -43,50 +43,52 @@ class TestV2_A extends EventEmitter {
         self.rCommonInfo = new ReactiveVar({})
 
     }
-    resetRData(){
-      let self= this
-      self.runSum=0
 
-      self.rCommonLog.set('')
-      self.rCommonInfo.set({})
-    }
-    log(info){
+    resetRData() {
+        let self = this
+        self.runSum = 0
 
-      // let arr=[]
-      // if(arguments.length>1){
-      //   for(let i=0;i<arguments.length;i++){
-      //     arr[i] =arguments[i]
-      //   }
-      // }
-      // let info = arr.join(' ')
-
-      let args = [].slice.apply(arguments)
-      console.log(info,args)
-
-      this.rCommonLog.set(info)
-
-      // let self =this;
-      //
-      // let logArr = self.rCommonLog.get()
-      // logArr.unshift(info)
-      //
-      // logArr = logArr.slice(0,10)
-      //
-      // self.rCommonLog.set(logArr)
-    }
-    updateCommonInfo(setObj){
-      let self =this
-      let info = self.rCommonInfo.get()
-      let newInfo = {}
-      info= Object.assign(newInfo,info,setObj)
-
-      self.rCommonInfo.set(newInfo)
+        self.rCommonLog.set('')
+        self.rCommonInfo.set({})
     }
 
+    log(info) {
+
+        // let arr=[]
+        // if(arguments.length>1){
+        //   for(let i=0;i<arguments.length;i++){
+        //     arr[i] =arguments[i]
+        //   }
+        // }
+        // let info = arr.join(' ')
+
+        let args = [].slice.apply(arguments)
+        console.log(info, args)
+
+        this.rCommonLog.set(info)
+
+        // let self =this;
+        //
+        // let logArr = self.rCommonLog.get()
+        // logArr.unshift(info)
+        //
+        // logArr = logArr.slice(0,10)
+        //
+        // self.rCommonLog.set(logArr)
+    }
+
+    updateCommonInfo(setObj) {
+        let self = this
+        let info = self.rCommonInfo.get()
+        let newInfo = {}
+        info = Object.assign(newInfo, info, setObj)
+
+        self.rCommonInfo.set(newInfo)
+    }
 
 
     initEvent() {
-      this.log('>>initEvent','fassfas ===','fasdfa')
+        this.log('>>initEvent', 'fassfas ===', 'fasdfa')
 
         let self = this
 
@@ -103,39 +105,39 @@ class TestV2_A extends EventEmitter {
 
 
     discover(deviceId, maxTimes) {
-        this.log('>>discover: '+ deviceId + ' try maxTimes: '+maxTimes)
+        this.log('>>discover: ' + deviceId + ' try maxTimes: ' + maxTimes)
 
         let self = this
 
         let num = 1
 
-        let tryDiscover = function() {
-            self.data.timeInfo['discoveryStartTime_'+num] = +new Date()
+        let tryDiscover = function () {
+            self.data.timeInfo['discoveryStartTime_' + num] = +new Date()
 
 
             BP3L.discover(deviceId, function (data) {
-              self.data.discoverInfo.push({
-                type:'success',
-                data:data
-              })
+                self.data.discoverInfo.push({
+                    type: 'success',
+                    data: data
+                })
 
-              self.data.timeInfo['discoverSuccessTime_'+num] = +new Date()
+                self.data.timeInfo['discoverSuccessTime_' + num] = +new Date()
 
-              self.connect(deviceId, self.CONNECT_MAX_TIMES)
+                self.connect(deviceId, self.CONNECT_MAX_TIMES)
 
             }, function (errorType, info) {
                 self.data.discoverInfo.push({
-                  type:'failure',
-                  errorType:errorType,
-                  info:info
+                    type: 'failure',
+                    errorType: errorType,
+                    info: info
                 })
 
                 //统信息
-                if(errorType =='discover_failure'){
-                  self.data.timeInfo['discoveryFailureTime_'+num] = +new Date()
+                if (errorType == 'discover_failure') {
+                    self.data.timeInfo['discoveryFailureTime_' + num] = +new Date()
 
-                }else if(errorType =='discover_error'){
-                  self.data.timeInfo['discoverErrorTime_'+num] = +new Date()
+                } else if (errorType == 'discover_error') {
+                    self.data.timeInfo['discoverErrorTime_' + num] = +new Date()
 
                 }
 
@@ -158,25 +160,26 @@ class TestV2_A extends EventEmitter {
         tryDiscover()
 
     }
+
     //直连
     connect(deviceId, maxTimes) {
         let self = this
-        this.log('>>connect',deviceId, maxTimes)
+        this.log('>>connect', deviceId, maxTimes)
 
         let num = 1
         let tryConnect = function () {
-            self.data.timeInfo['connectStartTime_'+num] = +new Date()
+            self.data.timeInfo['connectStartTime_' + num] = +new Date()
             BP3L.connect(deviceId, function (device) {
-                self.data.timeInfo['connectSuccessTime_'+num] = +new Date()
+                self.data.timeInfo['connectSuccessTime_' + num] = +new Date()
 
                 self.data.connectInfo.push({
-                  type:'success',
-                  device:device,
-                  startTime:self.data.timeInfo['connectStartTime_'+num],
-                  endTime:self.data.timeInfo['connectSuccessTime_'+num]
+                    type: 'success',
+                    device: device,
+                    startTime: self.data.timeInfo['connectStartTime_' + num],
+                    endTime: self.data.timeInfo['connectSuccessTime_' + num]
                 })
 
-                self.data.resultInfo.connectStatus= 'succcess'
+                self.data.resultInfo.connectStatus = 'success'
 
                 self.detectDisconnect(deviceId)
 
@@ -186,26 +189,26 @@ class TestV2_A extends EventEmitter {
             }, function (errorType, info) {
 
 
-              let endTime = +new Date()
-              if(errorType =='connect_timeout'){
-                self.data.timeInfo['connectTimeout_'+num] = endTime
+                let endTime = +new Date()
+                if (errorType == 'connect_timeout') {
+                    self.data.timeInfo['connectTimeout_' + num] = endTime
 
-              }else if(errorType =='connect_failure'){
-                self.data.timeInfo['connectFailureTime_'+num] = endTime
+                } else if (errorType == 'connect_failure') {
+                    self.data.timeInfo['connectFailureTime_' + num] = endTime
 
-              }else if(errorType =='connect_error'){
-                self.data.timeInfo['connectErrorTime_'+num] = endTime
+                } else if (errorType == 'connect_error') {
+                    self.data.timeInfo['connectErrorTime_' + num] = endTime
 
-              }
+                }
 
-              self.log('connect failure '+num +'times, errorType:'+errorType)
-              self.data.connectInfo.push({
-                type:'failure',
-                errorType:errorType,
-                info:info,
-                startTime:self.data.timeInfo['connectStartTime_'+num],
-                endTime:endTime
-              })
+                self.log('connect failure ' + num + 'times, errorType:' + errorType)
+                self.data.connectInfo.push({
+                    type: 'failure',
+                    errorType: errorType,
+                    info: info,
+                    startTime: self.data.timeInfo['connectStartTime_' + num],
+                    endTime: endTime
+                })
 
                 if (num < maxTimes) {
                     num++
@@ -227,117 +230,121 @@ class TestV2_A extends EventEmitter {
     }
 
     //发现－连
-    discoverAndConnect(deviceId, maxTimes){
+    discoverAndConnect(deviceId, maxTimes) {
         this.log('>>discoverAndConnect')
         let self = this
-        let num =1
+        let num = 1
         let discoverFailureTimes = 0
         let connectFailureTimes = 0
 
-        let tryDiscoverAndConnect=function(){
-           self.data.timeInfo['discoveryStartTime_'+num] = +new Date()
+        let tryDiscoverAndConnect = function () {
+            self.data.timeInfo['discoveryStartTime_' + num] = +new Date()
             BP3L.discover(deviceId, function (data) {
 
-              let endTime= +new Date()
-              self.data.timeInfo['discoverSuccessTime_'+num] = endTime
+                let endTime = +new Date()
+                self.data.timeInfo['discoverSuccessTime_' + num] = endTime
 
-              self.data.timeInfo['connectStartTime_'+num] = endTime
+                self.data.timeInfo['connectStartTime_' + num] = endTime
 
-              self.data.discoverInfo.push({
-                type:'success',
-                data:data,
-                startTime:self.data.timeInfo['discoverSuccessTime_'+num],
-                endTime:endTime
-              })
+                self.data.discoverInfo.push({
+                    type: 'success',
+                    data: data,
+                    startTime: self.data.timeInfo['discoveryStartTime_' + num],
+                    endTime: endTime
+                })
 
-              BP3L.connect(deviceId, function (device) {
-                   let endTime= +new Date()
-                   self.data.timeInfo['connectSuccessTime_'+num] = endTime
+                BP3L.connect(deviceId, function (device) {
+                    let endTime = +new Date()
+                    self.data.timeInfo['connectSuccessTime_' + num] = endTime
 
-                   self.data.connectInfo.push({
-                     type:'success',
-                     device:device,
-                     startTime:self.data.timeInfo['connectStartTime_'+num],
-                     endTime:endTime
-                   })
+                    self.data.connectInfo.push({
+                        type: 'success',
+                        device: device,
+                        startTime: self.data.timeInfo['connectStartTime_' + num],
+                        endTime: endTime
+                    })
 
-                   self.data.resultInfo.connectStatus= 'succcess'
+                    self.data.resultInfo.connectStatus = 'success'
 
                     self.detectDisconnect(deviceId)
                     //
                     self.measure(deviceId)
 
                 }, function (errorType, info) {
-                  connectFailureTimes++
+                    connectFailureTimes++
 
-                  let endTime= +new Date()
+                    let endTime = +new Date()
 
-                  if(errorType =='connect_timeout'){
-                    self.data.timeInfo['connectTimeout_'+num] = endTime
+                    if (errorType == 'connect_timeout') {
+                        self.data.timeInfo['connectTimeout_' + num] = endTime
 
-                  }else if(errorType =='connect_failure'){
-                    self.data.timeInfo['connectFailureTime_'+num] = endTime
+                    } else if (errorType == 'connect_failure') {
+                        self.data.timeInfo['connectFailureTime_' + num] = endTime
 
-                  }else if(errorType =='connect_error'){
-                    self.data.timeInfo['connectErrorTime_'+num] = endTime
-                  }
+                    } else if (errorType == 'connect_error') {
+                        self.data.timeInfo['connectErrorTime_' + num] = endTime
+                    }
 
-                  self.data.connectInfo.push({
-                    type:'failure',
-                    errorType:errorType,
-                    info:info,
-                    startTime:self.data.timeInfo['connectStartTime_'+num],
-                    endTime:endTime
-                  })
+                    self.data.connectInfo.push({
+                        type: 'failure',
+                        errorType: errorType,
+                        info: info,
+                        startTime: self.data.timeInfo['connectStartTime_' + num],
+                        endTime: endTime
+                    })
 
-                  if (num < maxTimes) {
-                      num++
+                    if (num < maxTimes) {
+                        num++
 
-                      setTimeout(()=> {
-                          tryDiscoverAndConnect()  //连接失败后 直连
-                      }, 2000)
+                        setTimeout(()=> {
+                            tryDiscoverAndConnect()  //连接失败后 直连
+                        }, 2000)
 
 
-                  } else {
-                      //failure
-                      self.onTestEnd('discoverAndConnectFailure',{
-                        discoverFailureTimes:discoverFailureTimes,
-                        connectFailureTimes:connectFailureTimes
-                      })
-                  }
+                    } else {
+                        //failure
+                        self.onTestEnd('discoverFailure', {
+                            discoverFailureTimes: discoverFailureTimes,
+                            connectFailureTimes: connectFailureTimes
+                        })
+                    }
 
                 })
 
             }, function (errorType, info) {
-              self.data.discoverInfo.push({
-                type:'failure',
-                errorType:errorType,
-                info:info
-              })
 
-              discoverFailureTimes++
-              if(errorType =='discover_failure'){
-                self.data.timeInfo['discoveryFailureTime_'+num] = +new Date()
+                let endTime = +new Date()
+                self.data.discoverInfo.push({
+                    type: 'failure',
+                    errorType: errorType,
+                    info: info,
+                    startTime: self.data.timeInfo['discoveryStartTime_' + num],
+                    endTime: endTime
+                })
 
-              }else if(errorType =='discover_error'){
-                self.data.timeInfo['discoverErrorTime_'+num] = +new Date()
+                discoverFailureTimes++
+                if (errorType == 'discover_failure') {
+                    self.data.timeInfo['discoveryFailureTime_' + num] = +new Date()
 
-              }
-              if (num < maxTimes) {
-                  num++
+                } else if (errorType == 'discover_error') {
+                    self.data.timeInfo['discoverErrorTime_' + num] = +new Date()
 
-                  setTimeout(()=> {
-                      tryDiscoverAndConnect()  //连接失败后 直连
-                  }, 2000)
+                }
+                if (num < maxTimes) {
+                    num++
+
+                    setTimeout(()=> {
+                        tryDiscoverAndConnect()  //连接失败后 直连
+                    }, 2000)
 
 
-              } else {
-                  //failure
-                  self.onTestEnd('discoverAndConnectFailure',{
-                    discoverFailureTimes:discoverFailureTimes,
-                    connectFailureTimes:connectFailureTimes
-                  })
-              }
+                } else {
+                    //failure
+                    self.onTestEnd('connectFailure', {
+                        discoverFailureTimes: discoverFailureTimes,
+                        connectFailureTimes: connectFailureTimes
+                    })
+                }
 
 
             })
@@ -355,24 +362,24 @@ class TestV2_A extends EventEmitter {
         self.data.timeInfo['measureStartTime'] = +new Date()
 
         BP3L.measure(deviceId, function (data) {
-          self.data.timeInfo['measureDoneTime'] = +new Date()
+            self.data.timeInfo['measureDoneTime'] = +new Date()
 
-            self.data.measureInfo= data
+            self.data.measureInfo = data
             //success
             BP3L.disconnectDevice(deviceId)
 
 
         }, function (errorType, info) {
 
-            self.data.measureInfo= info
+            self.data.measureInfo = info
 
             BP3L.disconnectDevice(deviceId)
 
-            if(errorType=='measure_failure'){
-              self.data.timeInfo['measureFailureTime'] = +new Date()
+            if (errorType == 'measure_failure') {
+                self.data.timeInfo['measureFailureTime'] = +new Date()
 
-            }else if(errorType=='measure_error'){
-              self.data.timeInfo['measureErrorTime'] = +new Date()
+            } else if (errorType == 'measure_error') {
+                self.data.timeInfo['measureErrorTime'] = +new Date()
 
             }
 
@@ -398,8 +405,8 @@ class TestV2_A extends EventEmitter {
 
         }, function (errorType, info) {
 
-            if(errorType == 'disconnectCallback_failure'){
-              self.data.timeInfo['disconenctFailureTime'] = +new Date()
+            if (errorType == 'disconnectCallback_failure') {
+                self.data.timeInfo['disconenctFailureTime'] = +new Date()
 
             }
             self.onTestEnd('disconenctFailure')
@@ -408,10 +415,9 @@ class TestV2_A extends EventEmitter {
     }
 
 
-
     //////////////////////////////////
     start(deviceId, testType) {
-        this.log('>>start',deviceId, testType)
+        this.log('>>start', deviceId, testType)
 
         let self = this
         self.running = true
@@ -428,27 +434,26 @@ class TestV2_A extends EventEmitter {
             },
             discoverInfo: [],
             connectInfo: [],    //连接信息
-            disconnectInfo:[],
+            disconnectInfo: [],
             measureInfo: {},
-            resultInfo:{
-              //endType
-              //connectStatus
+            resultInfo: {
+                //endType
+                //connectStatus
             }
 
         }
 
         self.runSum++
-        self.updateCommonInfo({'runSum':self.runSum})
+        self.updateCommonInfo({'runSum': self.runSum})
 
         //记录测试次数
 
-        if(self.TEST_TYPE  ==1){
+        if (self.TEST_TYPE == 1) {
             //直连需 先发现一台设备
             self.discover(deviceId, self.DISCOVER_MAX_TIMES)
-        }else if(self.TEST_TYPE  ==2){
-            self.discoverAndConnect(deviceId,self.DISCOVER_AND_CONNECT_TIMES)
+        } else if (self.TEST_TYPE == 2) {
+            self.discoverAndConnect(deviceId, self.DISCOVER_AND_CONNECT_TIMES)
         }
-
 
 
     }
@@ -463,38 +468,37 @@ class TestV2_A extends EventEmitter {
 
     }
 
-    onTestEnd(endType,detail) {
+    onTestEnd(endType, detail) {
         this.log('>>onTestEnd')
 
         let self = this;
         self.data.timeInfo['runEndTime'] = +new Date()
 
-        self.data.resultInfo.endType =endType
-        self.data.resultInfo.endDetail =detail
+        self.data.resultInfo.endType = endType
+        self.data.resultInfo.endDetail = detail
 
 
         console.log(self.data)
         //save data
 
-        DB.TestV2001.insert(self.data,function(error, id){
-          if(error) {
-            console.error(error)
-          }
+        DB.TestV2001.insert(self.data, function (error, id) {
+            if (error) {
+                console.error(error)
+            }
 
-          //开始下一轮
-          if (self.running) {
-              clearTimeout(self.nextStartTimer)
-              self.nextStartTimer = setTimeout(function () {
+            //开始下一轮
+            if (self.running) {
+                clearTimeout(self.nextStartTimer)
+                self.nextStartTimer = setTimeout(function () {
 
-                  self.start(self.DEVICE_ID,self.TEST_TYPE)
+                    self.start(self.DEVICE_ID, self.TEST_TYPE)
 
-              }, 5000)
-          } else {
-              self.log('Test TestV2_A stopped')
-          }
+                }, 5000)
+            } else {
+                self.log('Test TestV2_A stopped')
+            }
 
         })
-
 
 
     }
