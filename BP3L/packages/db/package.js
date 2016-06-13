@@ -43,6 +43,7 @@ Package.onUse(function(api) {
   /////Test v2//////
   api.addFiles('test_v2/TestV2001.js', ["server", "client"]);
 
+  api.addFiles('test_v2/TestV2001_analyze.js', ["server", "client"]);
 
 
 

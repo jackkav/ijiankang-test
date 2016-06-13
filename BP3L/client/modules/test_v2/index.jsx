@@ -86,6 +86,9 @@ App.TestV2Index = React.createClass({
                             //<RB.NavItem eventKey={1} href="#">Link Right</RB.NavItem>
                         }
 
+                        <RB.NavItem eventKey={1} href="/statistic/test_v2/index">test_v2 statistic</RB.NavItem>
+
+
                         <RB.NavItem eventKey={2} href="/statistic/TempAnalize1">analysis-1</RB.NavItem>
 
                         <RB.NavItem eventKey={2} href="/index_v1">index_v1</RB.NavItem>

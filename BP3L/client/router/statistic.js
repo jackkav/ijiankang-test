@@ -13,12 +13,6 @@ FlowRouter.route('/statistic/detail/:testId', {
 	}
 });
 
-FlowRouter.route('/statistic/StatisticTestV2', {
-	action: function(params, queryParams) {
-
-		ReactLayout.render(BP3L.StatisticTestV2)
-	}
-});
 
 FlowRouter.route('/statistic/TempAnalize1', {
 	action: function(params, queryParams) {
@@ -26,3 +20,33 @@ FlowRouter.route('/statistic/TempAnalize1', {
 		ReactLayout.render(BP3L.TempAnalize1)
 	}
 });
+
+
+
+//////////test_v2///////
+
+
+FlowRouter.route('/statistic/test_v2/index', {
+	action: function(params, queryParams) {
+
+		//ReactLayout.render(BP3L.StatisticTestV2Index)
+		ReactLayout.render(BP3L.StatisticTestV2Analysis_1)
+
+	}
+});
+FlowRouter.route('/statistic/test_v2/analysis_1', {
+	action: function(params, queryParams) {
+
+		ReactLayout.render(BP3L.StatisticTestV2Analysis_1)
+	}
+});
+
+FlowRouter.route('/statistic/test_v2/connectTime', {
+	action: function(params, queryParams) {
+
+		ReactLayout.render(BP3L.StatisticTestV2ConnectTime)
+	}
+});
+
+
+

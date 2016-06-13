@@ -181,6 +181,11 @@ class TestV2_A extends EventEmitter {
 
                 self.data.resultInfo.connectStatus = 'success'
 
+
+                //添加连接成功时所花费的时间 connectSuccessTime 方便查询
+                self.data.resultInfo.connectSuccessTime = self.data.timeInfo['connectSuccessTime_' + num]- self.data.timeInfo['connectStartTime_' + num]
+
+
                 self.detectDisconnect(deviceId)
 
                 //
