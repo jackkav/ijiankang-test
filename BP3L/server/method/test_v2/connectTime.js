@@ -51,7 +51,7 @@ Meteor.methods({
     },
 
 
-    'test_v2/getConnectTimeData':function(filter){
+    'test_v2/getSearchOptionsData':function(filter){
 
 
         // console.log(Mongo.Collection.prototype)
@@ -113,7 +113,7 @@ Meteor.methods({
 
 
 
-	'test_v2/getSearchOptionsData':function(){
+	'test_v2/getConnectTimeData':function(){
         var myFuture = new Future();
 		DB.TestV2001.rawCollection().group(
             function(x){

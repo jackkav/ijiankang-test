@@ -13,7 +13,8 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
     getInitialState(){
         return {
-            data: {}
+            data: {},
+            optionsData:[]
         }
     },
 
@@ -21,6 +22,8 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         let self = this;
         Meteor.call('test_v2/getConnectTimeData', function (err, data) {
             console.log(data)
+
+
             self.setState({
                 data: data
             })
@@ -39,6 +42,33 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             self.chart2.hideLoading()
 
         })
+
+
+        //////
+        Meteor.call('test_v2/getSearchOptionsData',function (err, data) {
+            console.log('getSearchOptionsData',data)
+
+            self.setState({
+                optionsData: data
+            })
+
+        })
+
+
+
+
+    },
+
+    getOptions(optionType){
+
+        if(optionType=='model'){
+
+            if(!this.state.optionsData.length) return []
+
+            
+
+
+        }
 
     },
 
@@ -360,6 +390,8 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         let self = this;
 
 
+
+
         return <div style={{padding:10}}>
 
             <a href="/statistic/test_v2/index" block>
@@ -391,10 +423,10 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                     </RB.FormGroup>
 
 
-                    <RB.FormGroup controlId="deviceType">
+                    <RB.FormGroup controlId="deviceModel">
 
                         <RB.Col sm={2}>
-                            TestType
+                            model
                         </RB.Col>
                         <RB.Col sm={10}>
                             <RB.FormControl
@@ -426,20 +458,15 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
             < div
                 id="container"
-                style={
-        {
-            width: 600, height
-        :
-            400, margin
-        :
-            '0 auto'
-        }
-    }>
+                style={{width: 600, height:
+            400, margin:
+            '0 auto'}}>
 
 
             </div >
 
-            < hr/ >
+            < hr
+            / >
 
             < div
                 id="container2"
@@ -457,6 +484,6 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             </div >
 
 
-            </ div >
-            }
-            })
+        </ div >
+    }
+    })
