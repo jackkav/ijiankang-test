@@ -2,9 +2,12 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 function roundToPercentage(first,second){
-  if(!isNumeric(first)||!isNumeric(second))return "0%";
+  if(!isNumeric(first)||!isNumeric(second)||!first||!second)return "0%";
   return (first/second).toFixed(5)*100+"%"
   //return math.round(first/second,5)*100+"%"
+}
+function defaultToZero(value){
+  return value?value:0
 }
 
 BP3L.StatisticTestV2Analysis_1 = React.createClass({
@@ -30,17 +33,17 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
 
             //测试成功率
             item.s_testSuccessPercent =roundToPercentage(item.s_connectTimesSuccessAll,item.s_testTimesAll)
-            item.s_testSuccessPercent_comment = '('+item.s_connectTimesSuccessAll +'/'+item.s_testTimesAll+')'
+            item.s_testSuccessPercent_comment = '('+defaultToZero(item.s_connectTimesSuccessAll) +'/'+defaultToZero(item.s_testTimesAll)+')'
 
             //连接成功率
             item.s_connectSuccessPercent =roundToPercentage(item.s_connectTimesSuccessAll,item.s_connectTimesAll)
-            item.s_connectSuccessPercent_comment ='('+item.s_connectTimesSuccessAll+'/'+item.s_connectTimesAll+')'
+            item.s_connectSuccessPercent_comment ='('+defaultToZero(item.s_connectTimesSuccessAll)+'/'+defaultToZero(item.s_connectTimesAll)+')'
 
             //第n次连接成功率
             item.s_connectTimes = item['type'+item.testType+'_connectTimes']
             item.s_connectTimes.forEach(function(stat,index){
                 item['s_'+index+'connectSuccessPercent'] = roundToPercentage(stat.success,stat.sum)
-                item['s_'+index+'connectSuccessPercent_comment'] = '('+stat.success+'/'+stat.sum+')'
+                item['s_'+index+'connectSuccessPercent_comment'] = '('+defaultToZero(stat.success)+'/'+defaultToZero(stat.sum)+')'
 
             })
 
