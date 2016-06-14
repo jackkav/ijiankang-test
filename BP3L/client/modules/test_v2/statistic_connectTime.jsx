@@ -88,7 +88,8 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             })
 
         }
-
+        ret=_.unique(ret)
+        ret=ret.sort();
         return ret
 
     },
