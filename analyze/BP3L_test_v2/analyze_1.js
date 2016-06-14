@@ -51,6 +51,17 @@ var results = db.runCommand({
                     {sum:0,success:0},
                     {sum:0,success:0},
                     {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
 
                 ],
                 type1_connect_timeout_count:0,
@@ -59,6 +70,17 @@ var results = db.runCommand({
                 ///=============
                     
                 type2_connectTimes:[
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
+                    {sum:0,success:0},
                     {sum:0,success:0},
                     {sum:0,success:0},
                     {sum:0,success:0},
@@ -97,7 +119,20 @@ var results = db.runCommand({
                         for(var i=0;i<10;i++){
                            if(i<doc.connectInfo.length)prev.type1_connectTimes[i].sum++
                          }
-                         
+
+                        // 第doc.connectInfo.length次连接成功
+                        if(doc.resultInfo.connectStatus == 'success'){
+
+                            for(var j =0;j<doc.connectInfo.length;j++){
+                                if(doc.connectInfo[j].type=='success'){
+                                    prev.type1_connectTimes[j].success++
+
+                                }
+                            }
+
+
+                            prev.type1_connectTimesSuccessAll++
+                        }
                          //统计超时次数
                         for(var i=0;i<doc.connectInfo.length;i++){
                            //prev.type1_connectTimes[i].all++
@@ -107,11 +142,7 @@ var results = db.runCommand({
                                
                          }
                          
-                         // 第doc.connectInfo.length次连接成功
-                         if(doc.resultInfo.connectStatus == 'success'){
-                             prev.type1_connectTimes[doc.connectInfo.length-1].success++
-                             prev.type1_connectTimesSuccessAll++
-                         }
+
                         
                      
                         //统计最多次数                        
@@ -136,7 +167,23 @@ var results = db.runCommand({
                         for(var i=0;i<10;i++){
                            if(i<doc.connectInfo.length)prev.type2_connectTimes[i].sum++
                          }
-                         
+
+
+                        // 第doc.connectInfo.length次连接成功
+                        if(doc.resultInfo.connectStatus == 'success'){
+
+                            //prev.type2_connectTimes[doc.connectInfo.length-1].success++
+                            for(var j =0;j<doc.connectInfo.length;j++){
+                                if(doc.connectInfo[j].type=='success'){
+                                    prev.type2_connectTimes[j].success++
+
+                                }
+                            }
+
+                            prev.type2_connectTimesSuccessAll++
+                        }
+
+                
                          //统计超时次数
                         for(var i=0;i<doc.connectInfo.length;i++){
                            //prev.type1_connectTimes[i].all++
@@ -146,12 +193,7 @@ var results = db.runCommand({
                                
                          }
                          
-                         // 第doc.connectInfo.length次连接成功
-                         if(doc.resultInfo.connectStatus == 'success'){
-                             
-                             prev.type2_connectTimes[doc.connectInfo.length-1].success++
-                             prev.type2_connectTimesSuccessAll++
-                         }
+
                         
                      
                         //统计最多次数                        
