@@ -50,43 +50,42 @@ Meteor.methods({
 
     },
 
+    'test_v2/getSearchOptionsData':function( ){
 
-    'test_v2/getSearchOptionsData':function(filter){
 
+        let queryCondition ={
+            'resultInfo.connectSuccessTime':{$exists:1},
+            'resultInfo.connectStatus':'success',
+        }
 
-        // console.log(Mongo.Collection.prototype)
-        //
-        // console.log('----------')
-        //
-        // console.log(DB.TestV2001)
-
-        //(keys, condition, initial, reduce[, finalize[, command[, options]]])
+        console.log(queryCondition)
 
 
         var myFuture = new Future();
         DB.TestV2001.rawCollection().group(
 
             function(x){
-                var mobileInfo = x.mobileInfo
+                var deviceInfo = x.mobileInfo
                 return {
 					
 					testType:x.testType,
 					
 					
-                    m_platform:mobileInfo.platform,  //time
-					m_version:mobileInfo.version,
-					m_manufacturer:mobileInfo.manufacturer,
-					m_model:mobileInfo.model,
-					m_serial:mobileInfo.serial,
+                    devicePlatform:deviceInfo.platform,  //time
+                    deviceVersion:deviceInfo.version,
+                    deviceManufacturer:deviceInfo.manufacturer,
+                    deviceModel:deviceInfo.model,
+                    deviceSerial:deviceInfo.serial,
                 
                 };  
             },
             //condition
-            {
-
-                'resultInfo.connectSuccessTime':{$exists:1},
-                'resultInfo.connectStatus':'success',
-            },
+            // {
+            //
+            //     'resultInfo.connectSuccessTime':{$exists:1},
+            //     'resultInfo.connectStatus':'success',
+            // },
+            queryCondition,
 
             //initial
             {
@@ -113,7 +112,19 @@ Meteor.methods({
 
 
 
-	'test_v2/getConnectTimeData':function(){
+	'test_v2/getConnectTimeData':function(testType , deviceModel){
+        let queryCondition ={
+            'resultInfo.connectSuccessTime':{$exists:1},
+            'resultInfo.connectStatus':'success',
+        }
+        if(testType )queryCondition.testType = testType
+        if(deviceModel )queryCondition['mobileInfo.model'] = deviceModel
+
+
+        console.log(queryCondition)
+
+
+
         var myFuture = new Future();
 		DB.TestV2001.rawCollection().group(
             function(x){
@@ -124,11 +135,12 @@ Meteor.methods({
                 };
             },
             //condition
-            {
-
-                'resultInfo.connectSuccessTime':{$exists:1},
-                'resultInfo.connectStatus':'success',
-            },
+            // {
+            //
+            //     'resultInfo.connectSuccessTime':{$exists:1},
+            //     'resultInfo.connectStatus':'success',
+            // },
+            queryCondition,
 
             //initial
             {
