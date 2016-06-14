@@ -2,6 +2,7 @@
  * Created by fanjinhui on 6/13/16.
  */
 //http://stackoverflow.com/questions/29295143/how-to-do-mongo-group-on-meteor-server-side
+//http://mongodb.github.io/node-mongodb-native/2.1/api/Collection.html#group
 
 
 wrapAsync = (Meteor.wrapAsync)? Meteor.wrapAsync : Meteor._wrapAsync;
