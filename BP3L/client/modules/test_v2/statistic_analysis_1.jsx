@@ -14,10 +14,20 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
     mixins: [ReactMeteorData],
     getMeteorData(){
 
-        let sub = Meteor.subscribe('test_v2.TestV2001_analyze_1')
+        //let sub = Meteor.subscribe('test_v2.TestV2001_analyze_1')
         return {
-            ready: sub.ready(),
-            items: DB.TestV2001_analyze_1.find({}, {}).fetch()
+            // ready: sub.ready(),
+            // items: DB.TestV2001_analyze_1.find({}, {}).fetch()
+        }
+    },
+
+
+    getInitialState(){
+        return {
+            items: [],
+            ready:false,
+
+            showComment:false
         }
     },
 
@@ -48,6 +58,7 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
             })
 
 
+            item.mobileString = h.getDeviceString(item.mobileInfo)
 
 
             result.push(item)
@@ -58,8 +69,36 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
 
     },
 
+
+    fetchData(cb){
+
+        let self= this
+        Meteor.call('test_v2/getOverviewData',function (err, data) {
+
+            if(err) {
+                console.error(err)
+                return
+            }
+
+            console.log('getOverviewData',data)
+
+
+            cb && cb(data)
+
+        })
+    },
+    componentWillMount(){
+        let self =this
+        this.fetchData(function(data){
+            self.setState({
+                items: data,
+                ready:true
+            })
+        })
+    },
+
     render(){
-        if (!this.data.ready) return <div>loading</div>
+        if (!this.state.ready) return <div>loading</div>
 
 
         var Table = Reactable.Table,
@@ -69,10 +108,11 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
             Td = Reactable.Td;
 
 
-        let items = this.formatData(this.data.items)
+        let items = this.formatData(this.state.items)
 
 
         return <div style={{padding:10}}>
+            <RB.ButtonToolbar>
 
             <a href="/">
                 <RB.Button >返回</RB.Button>
@@ -84,7 +124,19 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
             </a>
 
 
-                <pre>
+                <RB.Button  onClick={ ()=> this.setState({ showComment: !this.state.showComment })}>
+                    {this.state.showComment?'close Comment':'open Comment'}
+                </RB.Button>
+
+            </RB.ButtonToolbar>
+
+
+            <br/>
+
+
+            <RB.Panel collapsible expanded={this.state.showComment}>
+
+
 
                     测试类型<br/>
                     直连: 搜索到指定血压计－连接(若失败则根据id直连,最多10次)-测量-断开 <br/>
@@ -104,7 +156,12 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
                      连接回调时间的分布(可排除超时的case)
 
 
-                </pre>
+
+
+            </RB.Panel>
+
+
+
 
 
             <Table className="table reactable-table"
