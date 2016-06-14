@@ -18,11 +18,31 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         }
     },
 
-    fetchDataV2(cb, query){
+    fetchDataV2(query, cb){
         let self = this;
-        Meteor.call('test_v2/getConnectTimeData', function (err, data) {
-            console.log(data)
 
+
+        let paramsOrder=['testType','deviceModel']
+
+        let params= _.map(paramsOrder,function(value , index){
+
+            return query[value] || ''
+
+        })
+
+
+        console.log('params', params)
+
+
+
+        Meteor.apply('test_v2/getConnectTimeData', params,function (err, data) {
+
+            if(err) {
+                console.error(err)
+                return
+            }
+
+            console.log(data)
 
             self.setState({
                 data: data
@@ -33,10 +53,33 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
     },
 
+    fetchOptionsData(cb){
+
+        let self= this
+        Meteor.call('test_v2/getSearchOptionsData',function (err, data) {
+
+            if(err) {
+                console.error(err)
+                return
+            }
+
+            console.log('getSearchOptionsData',data)
+
+
+            self.setState({
+                optionsData: data
+            })
+
+            cb && cb(data)
+
+        })
+
+    },
+
     componentWillMount(){
 
         let self = this;
-        self.fetchDataV2(function () {
+        self.fetchDataV2({},function () {
 
             self.chart1.hideLoading()
             self.chart2.hideLoading()
@@ -45,30 +88,21 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
 
         //////
-        Meteor.call('test_v2/getSearchOptionsData',function (err, data) {
-            console.log('getSearchOptionsData',data)
-
-            self.setState({
-                optionsData: data
-            })
-
-        })
-
-
-
+        self.fetchOptionsData()
 
     },
 
     getOptions(optionType){
+        let ret =[]
+        if(optionType=='deviceModel'){
 
-        if(optionType=='model'){
-
-            if(!this.state.optionsData.length) return []
-
-            
-
+            ret = this.state.optionsData.map(function(item){
+                return item.deviceModel
+            })
 
         }
+
+        return ret
 
     },
 
@@ -170,7 +204,6 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
 
     },
-
 
     componentDidUpdate(nextProps, nextState){
 
@@ -377,11 +410,20 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
 
 
     formChange(e){
-
+        let self= this
         let changeType = e.target.id
         let value = e.target.value
-
         console.log(changeType, value)
+
+
+        if(changeType=='deviceModel'){
+            self.fetchDataV2({
+                deviceModel:value
+            })
+        }
+
+        
+
 
 
     },
@@ -389,7 +431,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
     render(){
         let self = this;
 
-
+        let models = this.getOptions('deviceModel')
 
 
         return <div style={{padding:10}}>
@@ -431,10 +473,17 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                         <RB.Col sm={10}>
                             <RB.FormControl
                                 onChange={this.formChange}
-
                                 componentClass="select" placeholder="select">
-                                <option value="android">android</option>
-                                <option value="ios">ios</option>
+
+                                <option value=""></option>
+
+                                {
+                                    models.map(function(model){
+                                        return <option value={model}>{model}</option>
+                                    })
+                                }
+
+
                             </RB.FormControl>
 
                         </RB.Col>
