@@ -261,6 +261,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 name: '概率',
+                max: 'datamax'
             },
             dataZoom: [
                 {
@@ -364,6 +365,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 name: '概率',
+                max: '1'
             },
             dataZoom: [
                 {
