@@ -55,7 +55,6 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             }
 
             console.log('getSearchOptionsData', data)
-
             self.setState({optionsData: data})
 
             cb && cb(data)
@@ -102,6 +101,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         }, 0)
 
         console.log(sum)
+        this.sum = sum;
 
         let dataMap = {}
         _.each(oriData, function(item) {
@@ -256,13 +256,11 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 boundaryGap: false,
                 data: xBarData,
                 name: '秒',
-                nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 name: '概率',
-                nameLocation: 'middle'
             },
             dataZoom: [
                 {
@@ -361,13 +359,11 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 boundaryGap: false,
                 data: xData,
                 name: '秒',
-                nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
                 boundaryGap: [0, '100%'],
                 name: '概率',
-                nameLocation: 'middle'
             },
             dataZoom: [
                 {
@@ -467,7 +463,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                             </RB.FormControl>
                     </RB.FormGroup>
                 </RB.Form>
-
+                Result set size: {this.sum}
             </RB.Panel>
         </RB.Col>
         <RB.Col xs={12} md={8}>
