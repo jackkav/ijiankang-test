@@ -124,7 +124,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             let index = i
             let item = dataMap[index]
 
-            data.x.push(i)
+            data.x.push(i/10)
 
             if (item) {
 
@@ -163,7 +163,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         }
         for (let i = 1; i <= 250; i++) {
 
-            dataChart1.x.push(i)
+            dataChart1.x.push(i/10)
             dataChart1.y.push(dataChart1.y[i - 1] + (dataMap[i]
                 ? dataMap[i].y
                 : 0))
@@ -253,7 +253,9 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: xBarData
+                data: xBarData,
+                name: 'seconds',
+                nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
@@ -322,7 +324,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 trigger: 'axis',
                 position: function(pt) {
                     return [pt[0], '10%'];
-                }
+                },
             },
             title: {
                 left: 'center',
@@ -354,11 +356,15 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: xData
+                data: xData,
+                name: 'seconds',
+                nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
-                boundaryGap: [0, '100%']
+                boundaryGap: [0, '100%'],
+                name: '%',
+                nameLocation: 'middle'
             },
             dataZoom: [
                 {
