@@ -254,12 +254,14 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 type: 'category',
                 boundaryGap: false,
                 data: xBarData,
-                name: 'seconds',
+                name: '秒',
                 nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
-                boundaryGap: [0, '100%']
+                boundaryGap: [0, '100%']，
+                name: '概率',
+                nameLocation: 'middle'
             },
             dataZoom: [
                 {
@@ -357,13 +359,13 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
                 type: 'category',
                 boundaryGap: false,
                 data: xData,
-                name: 'seconds',
+                name: '秒',
                 nameLocation: 'middle'
             },
             yAxis: {
                 type: 'value',
                 boundaryGap: [0, '100%'],
-                name: '%',
+                name: '概率',
                 nameLocation: 'middle'
             },
             dataZoom: [
