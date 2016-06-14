@@ -1,3 +1,12 @@
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function roundToPercentage(first,second){
+  if(!isNumeric(first)||!isNumeric(second))return "0%";
+  return (first/second).toFixed(5)*100+"%"
+  //return math.round(first/second,5)*100+"%"
+}
+
 BP3L.StatisticTestV2Analysis_1 = React.createClass({
     mixins: [ReactMeteorData],
     getMeteorData(){
@@ -20,17 +29,17 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
 
 
             //测试成功率
-            item.s_testSuccessPercent =item.s_connectTimesSuccessAll/item.s_testTimesAll
+            item.s_testSuccessPercent =roundToPercentage(item.s_connectTimesSuccessAll,item.s_testTimesAll)
             item.s_testSuccessPercent_comment = '('+item.s_connectTimesSuccessAll +'/'+item.s_testTimesAll+')'
 
             //连接成功率
-            item.s_connectSuccessPercent =item.s_connectTimesSuccessAll/item.s_connectTimesAll
+            item.s_connectSuccessPercent =roundToPercentage(item.s_connectTimesSuccessAll,item.s_connectTimesAll)
             item.s_connectSuccessPercent_comment ='('+item.s_connectTimesSuccessAll+'/'+item.s_connectTimesAll+')'
 
             //第n次连接成功率
             item.s_connectTimes = item['type'+item.testType+'_connectTimes']
             item.s_connectTimes.forEach(function(stat,index){
-                item['s_'+index+'connectSuccessPercent'] = stat.success/stat.sum
+                item['s_'+index+'connectSuccessPercent'] = roundToPercentage(stat.success,stat.sum)
                 item['s_'+index+'connectSuccessPercent_comment'] = '('+stat.success+'/'+stat.sum+')'
 
             })
