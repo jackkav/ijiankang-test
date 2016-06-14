@@ -3,7 +3,7 @@ function isNumeric(n) {
 }
 function roundToPercentage(first,second){
   if(!isNumeric(first)||!isNumeric(second)||!first||!second)return "0%";
-  return (first/second).toFixed(5)*100+"%"
+  return (first/second).toFixed(4)*100+"%"
   //return math.round(first/second,5)*100+"%"
 }
 function defaultToZero(value){
