@@ -85,6 +85,10 @@ Meteor.methods({
 
                 ///=============
 
+                type2_testTimesAll:0,     //测试次数
+                type2_connectTimesAll:0,   //总连接次数
+                type2_connectTimesSuccessAll:0,
+
                 type2_connectTimes:[
                     {sum:0,success:0},
                     {sum:0,success:0},

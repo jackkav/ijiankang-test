@@ -167,7 +167,7 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
             <Table className="table reactable-table"
                    columns={[
                         {key:'mobileString',label:'机型'},
-                        {key:'testType',label:'testType'},
+                        {key:'testType',label:'TestType'},
 
                         {key:'s_testSuccessPercent',label:'测试成功率'},
                         {key:'s_connectSuccessPercent',label:'总连接成功率'},

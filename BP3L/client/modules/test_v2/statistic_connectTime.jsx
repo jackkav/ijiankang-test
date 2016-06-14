@@ -419,9 +419,27 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
         let value = e.target.value
         console.log(changeType, value)
 
-        if (changeType == 'deviceModel') {
-            self.fetchDataV2({deviceModel: value})
+
+        if(changeType=='testType'){
+
+            self.testType = value
+
+            self.fetchDataV2({
+                testType:value,
+                deviceModel:''
+            })
+
+        }else if (changeType == 'deviceModel') {
+            self.fetchDataV2({
+                testType:self.testType,
+                deviceModel: value
+            })
         }
+
+
+
+
+
 
     },
 

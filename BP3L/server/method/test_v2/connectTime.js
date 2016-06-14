@@ -117,7 +117,7 @@ Meteor.methods({
             'resultInfo.connectSuccessTime':{$exists:1},
             'resultInfo.connectStatus':'success',
         }
-        if(testType )queryCondition.testType = testType
+        if(testType )queryCondition.testType = parseInt(testType)
         if(deviceModel )queryCondition['mobileInfo.model'] = deviceModel
 
 
