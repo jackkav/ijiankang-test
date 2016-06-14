@@ -259,7 +259,7 @@ BP3L.StatisticTestV2ConnectTime = React.createClass({
             },
             yAxis: {
                 type: 'value',
-                boundaryGap: [0, '100%']，
+                boundaryGap: [0, '100%'],
                 name: '概率',
                 nameLocation: 'middle'
             },
