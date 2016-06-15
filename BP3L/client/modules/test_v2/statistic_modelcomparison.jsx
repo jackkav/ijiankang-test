@@ -59,11 +59,14 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
               +' / SC1: '+item.totalSuccessfulFirstConnections
               +' / SC2: '+item.totalSuccessfulSecondConnections
 
-              + ' SC1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
-              + ' SC1+SC2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
+              + ' / SC1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
+              + ' / SC1+SC2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
 
-              + ' SD1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
-              + ' SD1+SD2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
+              +' / Discovers: '+item.totalAttemptsToDiscover
+              +' / SD1: '+item.totalSuccessfulFirstDiscoveries
+              +' / SD2: '+item.totalSuccessfulSecondDiscoveries
+              + ' / SD1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
+              + ' / SD1+SD2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
             }
 
 
