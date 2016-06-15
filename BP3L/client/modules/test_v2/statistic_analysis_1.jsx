@@ -122,8 +122,10 @@ BP3L.StatisticTestV2Analysis_1 = React.createClass({
                 href="/statistic/test_v2/connectTime">
                 <RB.Button >连接时间统计</RB.Button>
             </a>
-
-
+            <a  style={{float:'right'}}
+                href="/statistic/test_v2/modelComparison">
+                <RB.Button >Compare Models</RB.Button>
+            </a>
                 <RB.Button  onClick={ ()=> this.setState({ showComment: !this.state.showComment })}>
                     {this.state.showComment?'close Comment':'open Comment'}
                 </RB.Button>

@@ -48,5 +48,9 @@ FlowRouter.route('/statistic/test_v2/connectTime', {
 	}
 });
 
+FlowRouter.route('/statistic/test_v2/modelComparison', {
+	action: function(params, queryParams) {
 
-
+		ReactLayout.render(BP3L.StatisticTestV2ModelComparison)
+	}
+});
