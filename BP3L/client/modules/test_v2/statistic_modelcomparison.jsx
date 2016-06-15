@@ -44,7 +44,7 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
     </a>
       <Table className="table reactable-table"
         columns={[
-         {key:'mobileString',label:'机型'},
+         {key:'mobileString',label:'Device Models'},
         ]}>
         {
           this.state.items.map(function(item){
@@ -53,15 +53,17 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
             {
 
               item['mobileInfo.model'] + '   '+
-              ' / TR: '+item.totalAttemptsToConnect
-              +' / TS: '+item.totalSuccessfulConnections
-              +' / TF: '+item.totalFailedConnections
+              ' / Runs: '+item.totalAttemptsToConnect
+              +' / Success: '+item.totalSuccessfulConnections
+              +' / Fail: '+item.totalFailedConnections
               +' / SC1: '+item.totalSuccessfulFirstConnections
               +' / SC2: '+item.totalSuccessfulSecondConnections
 
               + ' SC1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
               + ' SC1+SC2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
 
+              + ' SD1/TR= '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
+              + ' SD1+SD2/TR= '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
             }
 
 
