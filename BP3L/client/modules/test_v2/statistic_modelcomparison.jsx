@@ -18,7 +18,7 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
   componentWillMount(){
       let self =this
       let t = +new Date()
-      Meteor.call("test_v2/model_list",function(e,r){
+      Meteor.call("test_v2/model_list_group",function(e,r){
         let t2= +new Date()
         console.log(t2 - t)
         self.setState({items:r,ready:true})
@@ -39,17 +39,20 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
 
 
     return <div>
+    <a href="/statistic/test_v2/index" block>
+        <RB.Button >返回</RB.Button>
+    </a>
       <Table className="table reactable-table"
         columns={[
          {key:'mobileString',label:'机型'},
         ]}>
         {
           this.state.items.map(function(item){
-            return    <Tr key={item._id}><Td column="mobileString">
+            return    <Tr key={item['mobileInfo.model']}><Td column="mobileString">
 
             {
 
-              item._id + '   '+
+              item['mobileInfo.model'] + '   '+
               ' / TR: '+item.totalAttemptsToConnect
               +' / TS: '+item.totalSuccessfulConnections
               +' / TF: '+item.totalFailedConnections
