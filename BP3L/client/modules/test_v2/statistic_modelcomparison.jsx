@@ -76,43 +76,117 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
                       <li>CTR - Connection Test Run</li>
                       <li>SC1 - Connection Success On First Attempt</li>
                       <li>SC2 - Connection Success On Second Attempt</li>
-                    <li>DTR - Discover Test Run</li>
-                    <li>SD1 - Discover Success On First Attempt</li>
-                    <li>SD2 - Discover Success On Second Attempt</li>
+                      <li>PFCS=SC1/CTR - Proportion Of First Connection Attempt Success</li>
+                    <li>PSCS=SC1+SC2/CTR - Proportion Of First And Second Connection Attempt Success</li>
+
+                      <li>DTR - Discover Test Run</li>
+                      <li>SD1 - Discover Success On First Attempt</li>
+                      <li>SD2 - Discover Success On Second Attempt</li>
+                      <li>PFDS=SD1/CTR - Proportion Of First Discovery Attempt Success</li>
+                    <li>PSDS=SD1+SD2/CTR - Proportion Of First And Second Discovery Attempt Success</li>
                       </ul>
 
                     </RB.Panel>
 
       <Table className="table reactable-table"
         columns={[
-         {key:'mobileString',label:'Device Models'},
-        ]}>
+         {key:'model',label:'Device Models'},
+          {key:'CTR',label:'CTR'},
+           {key:'SC1',label:'SC1'},
+            {key:'SC2',label:'SC2'},
+             {key:'PFCS',label:'PFCS'},
+              {key:'PSCS',label:'PSCS'},
+               {key:'SD1',label:'SD1'},
+                {key:'SD2',label:'SD2'},
+                 {key:'PFDS',label:'PFDS'},
+                  {key:'PSDS',label:'PSDS'},
+        ]}
+        sortable={[
+             'model',
+             'CTR',
+             'SC1',
+             'SC2',
+             'PFCS',
+             'DTR',
+             'SD1',
+             'SD2',
+             'PFDS',
+         ]}
+        >
         {
           this.state.items.map(function(item){
-            return    <Tr key={item['mobileInfo.model']}><Td column="mobileString">
-
+            return    <Tr key={item['mobileInfo.model']}>
+            <Td column="model">
             {
-
-              item['mobileInfo.model'] + '   '+
-              ' / CTR: '+item.totalAttemptsToConnect
-              // +' / Success: '+item.totalSuccessfulConnections
-              // +' / Fail: '+item.totalFailedConnections
-              +' / SC1: '+item.totalSuccessfulFirstConnections
-              +' / SC2: '+item.totalSuccessfulSecondConnections
-
-              + ' / SC1/CTR= '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
-              + ' / SC1+SC2/CTR= '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
-
-              +' / DTR: '+item.totalAttemptsToDiscover
-              +' / SD1: '+item.totalSuccessfulFirstDiscoveries
-              +' / SD2: '+item.totalSuccessfulSecondDiscoveries
-              + ' / SD1/DTR= '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
-              + ' / SD1+SD2/DTR= '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
+              item['mobileInfo.model']
             }
+            </Td>
+            <Td column="CTR">
+            {
+              item.totalAttemptsToConnect
+            }
+            </Td>
+            <Td column="SC1">
+            {
+              item.totalSuccessfulFirstConnections
+            }
+            </Td>
+            <Td column="SC2">
+            {
+              item.totalSuccessfulSecondConnections
+            }
+            </Td>
+            <Td column="PFCS">
+            {
+              h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
+            }
+            </Td>
+            <Td column="PSCS">
+            {
+              h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
+            }
+            </Td>
+            <Td column="DTR">
+            {
+              item.totalAttemptsToDiscover
+            }
+            </Td>
+            <Td column="SD1">
+            {
+              item.totalSuccessfulFirstDiscoveries
+            }
+            </Td>
+            <Td column="SD2">
+            {
+              item.totalSuccessfulSecondDiscoveries
+            }
+            </Td>
+            <Td column="PFDS">
+            {
+              h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
+            }
+            </Td>
+            <Td column="PSDS">
+            {
+              h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
+            }
+            </Td>
+              // +' / SC1: '+item.totalSuccessfulFirstConnections
+              // +' / SC2: '+item.totalSuccessfulSecondConnections
+              //
+              // + ' / PFCS: '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
+              // + ' / PSCS: '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
+              //
+              // +' / DTR: '+item.totalAttemptsToDiscover
+              // +' / SD1: '+item.totalSuccessfulFirstDiscoveries
+              // +' / SD2: '+item.totalSuccessfulSecondDiscoveries
+              // + ' / PFDS: '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
+              // + ' / PSDS: '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
+              //
+</Tr>
 
 
 
-            </Td></Tr>
 
           })
 
