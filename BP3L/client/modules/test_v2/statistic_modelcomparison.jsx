@@ -20,7 +20,7 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
       let t = +new Date()
       Meteor.call("test_v2/model_list_group",function(e,r){
         let t2= +new Date()
-        console.log(t2 - t)
+        console.log('loading time '+(t2 - t)/1000+' seconds')
         self.setState({items:r,ready:true})
       })
 
@@ -47,7 +47,7 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
 
         <a  style={{float:'right'}}
             href="/statistic/test_v2/connectTime">
-            <RB.Button >Configuration</RB.Button>
+            <RB.Button >Connect Time</RB.Button>
         </a>
             <RB.Button  onClick={ ()=> this.setState({ showComment: !this.state.showComment })}>
                 {this.state.showComment?'close Config':'open Config'}
@@ -73,17 +73,17 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
                       </li>
                       </ol>
                       <ul>
-                      <li>CTR - Connection Test Run</li>
+                      <li>CTR - Connection Test Runs, each run can attempt to connect up to ten times, excludes runs after discovery because discovery could fail</li>
                       <li>SC1 - Connection Success On First Attempt</li>
                       <li>SC2 - Connection Success On Second Attempt</li>
-                      <li>PFCS=SC1/CTR - Proportion Of First Connection Attempt Success</li>
-                    <li>PSCS=SC1+SC2/CTR - Proportion Of First And Second Connection Attempt Success</li>
+                      <li>PSC1=SC1/CTR - Proportion Of First Connection Attempt Success</li>
+                      <li>PSC12=SC1+SC2/CTR - Proportion Of First And Second Connection Attempt Success</li>
 
-                      <li>DTR - Discover Test Run</li>
+                      <li>DTR - Discover Test Runs, </li>
                       <li>SD1 - Discover Success On First Attempt</li>
                       <li>SD2 - Discover Success On Second Attempt</li>
-                      <li>PFDS=SD1/CTR - Proportion Of First Discovery Attempt Success</li>
-                    <li>PSDS=SD1+SD2/CTR - Proportion Of First And Second Discovery Attempt Success</li>
+                      <li>PSD1=SD1/CTR - Proportion Of First Discovery Attempt Success</li>
+                    <li>PSD12=SD1+SD2/CTR - Proportion Of First And Second Discovery Attempt Success</li>
                       </ul>
 
                     </RB.Panel>
@@ -92,25 +92,29 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
         columns={[
          {key:'model',label:'Device Models'},
           {key:'CTR',label:'CTR'},
-           {key:'SC1',label:'SC1'},
-            {key:'SC2',label:'SC2'},
-             {key:'PFCS',label:'PFCS'},
-              {key:'PSCS',label:'PSCS'},
+           {key:'Success',label:'Success'},
+            {key:'Fail',label:'Fail'},
+             {key:'SC1',label:'SC1'},
+              {key:'SC2',label:'SC2'},
+             {key:'PSC1',label:'PSC1'},
+              {key:'PSC12',label:'PSC12'},
                {key:'SD1',label:'SD1'},
                 {key:'SD2',label:'SD2'},
-                 {key:'PFDS',label:'PFDS'},
-                  {key:'PSDS',label:'PSDS'},
+                 {key:'PSD1',label:'PSD1'},
+                  {key:'PSD12',label:'PSD12'},
         ]}
         sortable={[
              'model',
              'CTR',
              'SC1',
              'SC2',
-             'PFCS',
+             'PSC1',
+             'PSC12',
              'DTR',
              'SD1',
              'SD2',
-             'PFDS',
+             'PSD1',
+             'PSD12',
          ]}
         >
         {
@@ -126,6 +130,16 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
               item.totalAttemptsToConnect
             }
             </Td>
+            <Td column="Success">
+            {
+              item.totalSuccessfulConnections
+            }
+            </Td>
+            <Td column="Fail">
+            {
+              item.totalFailedConnections
+            }
+            </Td>
             <Td column="SC1">
             {
               item.totalSuccessfulFirstConnections
@@ -136,12 +150,12 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
               item.totalSuccessfulSecondConnections
             }
             </Td>
-            <Td column="PFCS">
+            <Td column="PSC1">
             {
               h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
             }
             </Td>
-            <Td column="PSCS">
+            <Td column="PSC12">
             {
               h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
             }
@@ -161,28 +175,16 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
               item.totalSuccessfulSecondDiscoveries
             }
             </Td>
-            <Td column="PFDS">
+            <Td column="PSD1">
             {
               h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
             }
             </Td>
-            <Td column="PSDS">
+            <Td column="PSD12">
             {
               h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
             }
             </Td>
-              // +' / SC1: '+item.totalSuccessfulFirstConnections
-              // +' / SC2: '+item.totalSuccessfulSecondConnections
-              //
-              // + ' / PFCS: '+ h.roundToPercentage(item.totalSuccessfulFirstConnections,item.totalAttemptsToConnect)
-              // + ' / PSCS: '+ h.roundToPercentage((item.totalSuccessfulFirstConnections+item.totalSuccessfulSecondConnections),item.totalAttemptsToConnect)
-              //
-              // +' / DTR: '+item.totalAttemptsToDiscover
-              // +' / SD1: '+item.totalSuccessfulFirstDiscoveries
-              // +' / SD2: '+item.totalSuccessfulSecondDiscoveries
-              // + ' / PFDS: '+ h.roundToPercentage(item.totalSuccessfulFirstDiscoveries,item.totalAttemptsToDiscover)
-              // + ' / PSDS: '+ h.roundToPercentage((item.totalSuccessfulFirstDiscoveries+item.totalSuccessfulSecondDiscoveries),item.totalAttemptsToDiscover)
-              //
 </Tr>
 
 
