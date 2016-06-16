@@ -87,7 +87,6 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
                       </ul>
 
                     </RB.Panel>
-
       <Table className="table reactable-table"
         columns={[
          {key:'model',label:'Device Models'},
@@ -120,11 +119,11 @@ BP3L.StatisticTestV2ModelComparison = React.createClass({
         {
           this.state.items.map(function(item){
             return    <Tr key={item['mobileInfo.model']}>
-            <Td column="model">
-            {
-              item['mobileInfo.model']
-            }
-            </Td>
+              <Td column="model">
+                  <RB.OverlayTrigger trigger="hover" placement="bottom" overlay={<RB.Popover title="Popover bottom"><strong>Holy guacamole!</strong> Check this info.</RB.Popover>}>
+                        <RB.Button bsStyle="default">{item['mobileInfo.model']}</RB.Button>
+                      </RB.OverlayTrigger>
+                </Td>
             <Td column="CTR">
             {
               item.totalAttemptsToConnect
